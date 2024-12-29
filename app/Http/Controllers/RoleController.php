@@ -15,7 +15,7 @@ class RoleController extends Controller
     {
         $roles = Role::orderBy('created_at', 'desc')->get();
 
-        return Inertia::render('Roles/Index', [
+        return Inertia::render('Roles/Main', [
             'roles' => $roles,
         ]);
     }

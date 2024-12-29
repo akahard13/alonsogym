@@ -3,7 +3,7 @@ import { Link, usePage } from '@inertiajs/react';
 
 export default function Main() {
     const { roles, flash } = usePage().props;
-
+    console.log(roles, flash);
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">Roles</h1>
