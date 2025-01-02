@@ -13,7 +13,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::orderBy('created_at', 'desc')->get();
+        $roles = Role::orderBy('id', 'asc')->get();
 
         return Inertia::render('Roles/Main', [
             'roles' => $roles,

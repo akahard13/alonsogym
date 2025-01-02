@@ -1,5 +1,6 @@
 import React from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, Head } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Edit({ role }) {
     const { data, setData, put, errors } = useForm({
@@ -12,7 +13,14 @@ export default function Edit({ role }) {
     };
 
     return (
-        <div>
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    Roles
+                </h2>
+            }
+        >
+            <Head title="Roles" />
             <h1 className="text-2xl font-bold mb-4">Editar Rol</h1>
 
             <form onSubmit={handleSubmit}>
@@ -33,6 +41,6 @@ export default function Edit({ role }) {
                     Actualizar
                 </button>
             </form>
-        </div>
+        </AuthenticatedLayout>
     );
 }

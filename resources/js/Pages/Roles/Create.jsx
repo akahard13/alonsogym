@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useForm } from '@inertiajs/react';
+import { useForm, Head } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Create() {
     const { data, setData, post, errors } = useForm({
@@ -12,7 +13,14 @@ export default function Create() {
     };
 
     return (
-        <div>
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    Roles
+                </h2>
+            }
+        >
+            <Head title="Roles" />
             <h1 className="text-2xl font-bold mb-4">Crear Rol</h1>
 
             <form onSubmit={handleSubmit}>
@@ -33,6 +41,6 @@ export default function Create() {
                     Guardar
                 </button>
             </form>
-        </div>
+        </AuthenticatedLayout>
     );
 }
