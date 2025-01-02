@@ -22,12 +22,12 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     // Rutas para roles
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index'); // Listar roles
-    Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create'); // Formulario de creación
-    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store'); // Guardar nuevo rol
-    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit'); // Formulario de edición
-    Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update'); // Actualizar rol existente
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy'); // Eliminar rol
+    //Route::get('/roles', [RoleController::class, 'index'])->name('roles.index'); // Listar roles
+    // Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create'); // Formulario de creación
+    // Route::post('/roles', [RoleController::class, 'store'])->name('roles.store'); // Guardar nuevo rol
+    // Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('roles.edit'); // Formulario de edición
+    // Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update'); // Actualizar rol existente
+    // Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy'); // Eliminar rol
     //Rutas para clientes
     Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
     Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');

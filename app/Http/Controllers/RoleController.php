@@ -39,7 +39,7 @@ class RoleController extends Controller
 
         Role::create($validated);
 
-        return redirect()->route('roles.index')->with('success', 'Rol creado exitosamente.');
+        return redirect()->route('profile.edit')->with('success', 'Rol creado exitosamente.');
     }
 
     /**
@@ -63,7 +63,7 @@ class RoleController extends Controller
 
         $role->update($validated);
 
-        return redirect()->route('roles.index')->with('success', 'Rol actualizado exitosamente.');
+        return redirect()->route('profile.edit')->with('success', 'Rol actualizado exitosamente.');
     }
 
     /**
@@ -73,6 +73,6 @@ class RoleController extends Controller
     {
         $role->delete();
 
-        return redirect()->route('roles.index')->with('success', 'Rol eliminado exitosamente.');
+        return redirect()->route('profile.edit')->with('success', 'Rol eliminado exitosamente.');
     }
 }

@@ -36,7 +36,7 @@ export default function Edit({ role }) {
                 </div>
                 <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className="bg-cyan-900 text-white px-4 py-2 rounded hover:bg-cyan-600"
                 >
                     Actualizar
                 </button>

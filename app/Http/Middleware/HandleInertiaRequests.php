@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -38,6 +39,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'permission' => $request->session()->get('permission'),
             ],
+            'roles'=>Role::orderBy('id', 'asc')->get()
         ];
     }
 }
