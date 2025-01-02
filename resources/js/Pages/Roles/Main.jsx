@@ -17,7 +17,7 @@ export default function Main({ auth }) {
     };
 
     const handleConfirm = () => {
-        destroy(route('clientes.destroy', selectedId));
+        destroy(route('roles.destroy', selectedId));
         setShowModal(false);
     };
     return (
@@ -64,7 +64,7 @@ export default function Main({ auth }) {
                                         <HiOutlinePencilSquare className='w-8 h-8' title='Editar' />
                                     </Link>
                                     <button
-                                        onClick={() => handleDeleteClick(cliente.id)}
+                                        onClick={() => handleDeleteClick(role.id)}
                                         className="hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
                                     >
                                         <CgTrash className='w-8 h-8' title='Eliminar' />
