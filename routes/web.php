@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\PagoPersonalController;
+use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiciosController;
@@ -9,13 +12,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Auth/Login');
+})->name('login');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -37,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
     Route::put('/clientes/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
     Route::delete('/clientes/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
-    
+
     //Rutas para servicios
     Route::get('/servicios', [ServiciosController::class, 'index'])->name('servicios.index');
     Route::get('/servicios/create', [ServiciosController::class, 'create'])->name('servicios.create');
@@ -45,6 +43,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/servicios/{servicio}/edit', [ServiciosController::class, 'edit'])->name('servicios.edit');
     Route::put('/servicios/{servicio}', [ServiciosController::class, 'update'])->name('servicios.update');
     Route::delete('/servicios/{servicio}', [ServiciosController::class, 'destroy'])->name('servicios.destroy');
+
+    //Rutas para personal y sus pagos
+    Route::get('/personal', [PersonalController::class, 'index'])->name('personal.index');
+    Route::get('/personal/create', [PersonalController::class, 'create'])->name('personal.create');
+    Route::post('/personal', [PersonalController::class, 'store'])->name('personal.store');
+    Route::get('/personal/{personal}/edit', [PersonalController::class, 'edit'])->name('personal.edit');
+    Route::put('/personal/{personal}', [PersonalController::class, 'update'])->name('personal.update');
+    Route::delete('/personal/{personal}', [PersonalController::class, 'destroy'])->name('personal.destroy');
+    Route::get('/pago_personal/{personal}', [PagoPersonalController::class, 'index'])->name('pago_personal.index');
+    Route::get('/pago_personal/{personal}/create', [PagoPersonalController::class, 'create'])->name('pago_personal.create');
+    Route::post('/pago_personal/store', [PagoPersonalController::class, 'store'])->name('pago_personal.store');
+    //Rutas para categorias
+    Route::get('/categorias', [CategoriasController::class, 'index'])->name('categorias.index');
+    Route::get('/categorias/create', [CategoriasController::class, 'create'])->name('categorias.create');
+    Route::post('/categorias', [CategoriasController::class, 'store'])->name('categorias.store');
+    Route::get('/categorias/{categoria}/edit', [CategoriasController::class, 'edit'])->name('categorias.edit');
+    Route::put('/categorias/{categoria}', [CategoriasController::class, 'update'])->name('categorias.update');
+    Route::delete('/categorias/{categoria}', [CategoriasController::class, 'destroy'])->name('categorias.destroy');
 
     // Rutas para el perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
