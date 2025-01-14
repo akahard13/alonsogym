@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PagoPersonalController;
+use App\Http\Controllers\PagoServiciosController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
@@ -28,13 +29,17 @@ Route::middleware('auth')->group(function () {
     // Route::patch('/roles/{role}', [RoleController::class, 'update'])->name('roles.update'); // Actualizar rol existente
     // Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy'); // Eliminar rol
 
-    //Rutas para clientes
+    //Rutas para clientes y pagos de servicios
     Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
     Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
     Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
     Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
     Route::put('/clientes/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
     Route::delete('/clientes/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.destroy');
+    Route::get('/pago_servicios/{servicio}/{tipo_pago}/obtener_precio', [PagoServiciosController::class, 'obtener_precios'])->name('pago_servicios.obtener_precio');
+    Route::get('/pago_servicios/{cliente}', [PagoServiciosController::class, 'index'])->name('pago_servicios.index');
+    Route::get('/pago_servicios/{cliente}/create', [PagoServiciosController::class, 'create'])->name('pago_servicios.create');
+    Route::post('/pago_servicios/store', [PagoServiciosController::class, 'store'])->name('pago_servicios.store');
 
     //Rutas para servicios
     Route::get('/servicios', [ServiciosController::class, 'index'])->name('servicios.index');

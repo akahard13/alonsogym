@@ -61,7 +61,7 @@ const Main = ({ clientes, auth }) => {
                             <td className="text-left px-4 py-2">{cliente.codigo}</td>
                             {rol === AdminRol && (
                                 <td className="flex justify-around space-x-4">
-                                    <Link
+                                    <Link href={route('pago_servicios.index', cliente.id)}
                                         className="text-cyan-900 hover:text-green-700"
                                     >
                                         <RiMoneyDollarCircleLine className='w-8 h-8' title='Pagar' />

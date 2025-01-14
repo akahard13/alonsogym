@@ -26,6 +26,7 @@ return new class extends Migration
                 ->onDelete('cascade'); // Elimina los pagos si el tipo de pago se elimina
             $table->decimal('precio', 8, 2); // Precio pagado, hasta 8 dígitos y 2 decimales
             $table->timestamp('fecha_pago'); // Fecha en que se realizó el pago
+            $table->timestamp('fecha_vencimiento'); // Fecha en que se realizó el pago
             $table->timestamps(); // Campos created_at y updated_at
         });
     }

@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'permission' => $request->session()->get('permission'),
+                'message' => $request->session()->get('message')
             ],
             'roles'=>Role::orderBy('id', 'asc')->get()
         ];
