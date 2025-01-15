@@ -67,30 +67,65 @@ class ServiciosController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            return Inertia::render('Clientes/Edit', ['cliente' => $servicio]);
+            $servicio = Servicio::findOrFail($servicio->id);
+            $tipo_pagos = TipoPagoServicio::all(); 
+            $precios= PrecioServicio::with('tipo_pago')->where('servicio', $servicio->id)->get(); // Suponiendo que esta es la lista de modalidades
+
+            return Inertia::render('Servicios/Edit', [
+                'servicio' => $servicio,
+                'precios' => $precios,
+                'tipo_pagos' => $tipo_pagos
+            ]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
 
-    public function update(Request $request, Servicio $servicio)
+    public function update(Request $request, $id)
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
+            // Validación
             $request->validate([
-                'nombre' => 'required|string|max:255',
-                'fecha_nacimiento' => 'required|date',
-                'celular' => 'required|string|max:15',
-                'genero' => 'required|exists:generos,id',
-                'huella' => 'nullable|string|max:255',
-                'codigo' => 'required|string|max:255|unique:clientes,codigo,' . $servicio->id,
+                'nombre' => 'required|string',
+                'modalidades' => 'nullable|array',
+                'modalidades.*' => 'nullable|numeric|min:0',
             ]);
 
-            $servicio->update($request->all());
+            // Obtener el servicio
+            $servicio = Servicio::findOrFail($id);
 
+            // Actualizar el nombre del servicio
+            $servicio->update([
+                'nombre' => $request->nombre,
+            ]);
+
+            // Obtener las modalidades del request
+            $modalidades = $request->input('modalidades', []);
+            $ids = array_keys($modalidades);
+            $valores = array_values($modalidades);
+
+            // Eliminar las modalidades existentes
+            PrecioServicio::where('servicio', $id)->delete();
+
+            // Insertar las modalidades actualizadas
+            foreach ($ids as $index => $id) {
+                if (!empty($valores[$index])) {
+                    PrecioServicio::create([
+                        'servicio' => $servicio->id,
+                        'tipo_pago' => $id,
+                        'precio' => $valores[$index],
+                    ]);
+                }
+            }
+
+            // Redirigir con mensaje de éxito
             return redirect()->route('servicios.index')->with('success', 'Servicio actualizado correctamente.');
         }
+
+        // Si el usuario no tiene permisos, mostrar la vista de permisos
         return Inertia::render('NoPermissions');
     }
+
 
     public function destroy(Servicio $servicio)
     {
