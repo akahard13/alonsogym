@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
 
     //Rutas para clientes y pagos de servicios
     Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+    Route::get('/clientes/planes', [ClienteController::class, 'activos'])->name('clientes.activos');
+    Route::get('/clientes/vencidos', [ClienteController::class, 'inactivos'])->name('clientes.inactivos');
     Route::get('/clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
     Route::post('/clientes', [ClienteController::class, 'store'])->name('clientes.store');
     Route::post('/clientes/pago', [ClienteController::class, 'pago'])->name('clientes.pago');

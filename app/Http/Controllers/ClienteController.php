@@ -10,6 +10,7 @@ use App\Models\Servicio;
 use App\Models\TipoPagoServicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ClienteController extends Controller
@@ -30,7 +31,6 @@ class ClienteController extends Controller
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
-
     public function store(Request $request)
     {
         $user_rol = Auth::user()->rol;
@@ -90,11 +90,20 @@ class ClienteController extends Controller
         }
         return Inertia::render('NoPermissions');
     }
-
     public function index()
     {
         $clientes = Cliente::with('genero')->get();
         return Inertia::render('Clientes/Main', ['clientes' => $clientes]);
+    }
+    public function activos()
+    {
+        $clientes = $this->obtenerClientes(true);
+        return Inertia::render('Planes', ['clientes' => $clientes]);
+    }
+    public function inactivos()
+    {
+        $clientes = $this->obtenerClientes(false);
+        return Inertia::render('Planes', ['clientes' => $clientes]);
     }
 
     public function edit(Cliente $cliente)
@@ -106,7 +115,6 @@ class ClienteController extends Controller
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
-
     public function update(Request $request, Cliente $cliente)
     {
         $user_rol = Auth::user()->rol;
@@ -126,7 +134,6 @@ class ClienteController extends Controller
         }
         return Inertia::render('NoPermissions');
     }
-
     public function destroy(Cliente $cliente)
     {
         $user_rol = Auth::user()->rol;
@@ -135,5 +142,34 @@ class ClienteController extends Controller
             return redirect()->route('clientes.index')->with('success', 'Cliente eliminado correctamente.');
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
+    }
+    private function obtenerClientes($estado = true)
+    {
+        $clientes = DB::table('clientes as cli')
+            ->join('pago_servicios as ps', function ($join) {
+                $join->on('cli.id', '=', 'ps.cliente')
+                    ->whereRaw('ps.fecha_pago = (SELECT MAX(sub_ps.fecha_pago) FROM pago_servicios AS sub_ps WHERE sub_ps.cliente = cli.id)');
+            })
+            ->join('generos as g', 'cli.genero', '=', 'g.id')
+        ->join('servicios as s', 'ps.servicio', '=', 's.id')
+            ->select(
+                'cli.id',
+                'cli.nombre',
+                'cli.codigo',
+                'ps.fecha_pago',
+                'ps.fecha_vencimiento',
+                'g.nombre as genero',
+                's.nombre as servicio',
+                DB::raw('CASE 
+                         WHEN NOW() BETWEEN ps.fecha_pago AND ps.fecha_vencimiento THEN true
+                         ELSE false 
+                     END AS estado')
+            )
+            ->get();
+        $clientes = $clientes->filter(function ($cliente) use ($estado) {
+            return $cliente->estado == $estado;
+        });
+
+        return $clientes->toArray();
     }
 }
