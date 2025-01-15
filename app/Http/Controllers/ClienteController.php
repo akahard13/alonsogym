@@ -151,7 +151,7 @@ class ClienteController extends Controller
                     ->whereRaw('ps.fecha_pago = (SELECT MAX(sub_ps.fecha_pago) FROM pago_servicios AS sub_ps WHERE sub_ps.cliente = cli.id)');
             })
             ->join('generos as g', 'cli.genero', '=', 'g.id')
-        ->join('servicios as s', 'ps.servicio', '=', 's.id')
+            ->join('servicios as s', 'ps.servicio', '=', 's.id')
             ->select(
                 'cli.id',
                 'cli.nombre',
