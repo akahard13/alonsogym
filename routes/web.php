@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\EgresosController;
+use App\Http\Controllers\IngresosController;
 use App\Http\Controllers\PagoPersonalController;
 use App\Http\Controllers\PagoServiciosController;
 use App\Http\Controllers\PersonalController;
@@ -69,6 +71,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/categorias/{categoria}/edit', [CategoriasController::class, 'edit'])->name('categorias.edit');
     Route::put('/categorias/{categoria}', [CategoriasController::class, 'update'])->name('categorias.update');
     Route::delete('/categorias/{categoria}', [CategoriasController::class, 'destroy'])->name('categorias.destroy');
+
+    //Finanzas routes
+    Route::get(('/ingresos'), [IngresosController::class, 'index'])->name('ingresos.index');
+    Route::get(('/ingresos/create'), [IngresosController::class, 'create'])->name('ingresos.create');
+    Route::post('/ingresos', [IngresosController::class, 'store'])->name('ingresos.store');
+    Route::get(('/ingresos/{ingresos}/edit'), [IngresosController::class, 'edit'])->name('ingresos.edit');
+    Route::delete('/ingresos/{ingresos}', [IngresosController::class, 'destroy'])->name('ingresos.destroy');
+    Route::put('/ingresos/{ingresos}/update', [IngresosController::class, 'update'])->name('ingresos.update');
+
+    Route::get(('/egresos'), [EgresosController::class, 'index'])->name('egresos.index');
+    Route::get(('/egresos/create'), [EgresosController::class, 'create'])->name('egresos.create');
+    Route::post('/egresos', [EgresosController::class, 'store'])->name('egresos.store');
+    Route::get(('/egresos/{egresos}/edit'), [EgresosController::class, 'edit'])->name('egresos.edit');
+    Route::delete('/egresos/{egresos}', [EgresosController::class, 'destroy'])->name('egresos.destroy');
+    Route::put('/egresos/{egresos}/update', [EgresosController::class, 'update'])->name('egresos.update');
 
     // Rutas para el perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

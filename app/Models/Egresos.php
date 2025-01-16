@@ -11,7 +11,7 @@ class Egresos extends Model
 
     protected $fillable = ['descripcion', 'fecha', 'categoria', 'total'];
 
-    public function categoriaEgreso()
+    public function categoria()
     {
         return $this->belongsTo(Categorias::class, 'categoria');
     }

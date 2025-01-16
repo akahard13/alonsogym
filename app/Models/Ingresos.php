@@ -11,7 +11,7 @@ class Ingresos extends Model
 
     protected $fillable = ['descripcion', 'fecha', 'categoria', 'total'];
 
-    public function categoriaIngreso()
+    public function categoria()
     {
         return $this->belongsTo(Categorias::class, 'categoria', 'id');
     }
