@@ -107,7 +107,7 @@ const Main = ({ datos, auth, editar, eliminar, create }) => {
             </table>
             <ConfirmModal
                 show={showModal}
-                title="¿Estás seguro de que quieres eliminar este cliente?"
+                title="¿Estás seguro de que quieres eliminarlo?"
                 onClose={() => setShowModal(false)}
                 onConfirm={handleConfirm}
             />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
@@ -17,7 +17,49 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
         fecha_pago: '',
         fecha_vencimiento: '',
     });
+    const calcularFechaVencimiento = (fechaPago, tipoPago) => {
+        const fecha = new Date(fechaPago);
+        let fechaVencimiento = new Date(fecha);
 
+        switch (Number(tipoPago)) {
+            case 4: // Mensual
+                if (fecha.getMonth() === 1 && fecha.getUTCDate() === 1) {
+                    fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth());
+                    fechaVencimiento.setUTCDate(28);
+                }
+                else {
+                    fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth() + 1);
+                    fechaVencimiento.setUTCDate(fechaVencimiento.getUTCDate() - 1);
+                }
+                break;
+
+            case 3: // Quincenal
+                const cantidadDiasDelMes = obtenerDiasDelMes(fechaPago);
+                fechaVencimiento.setDate(
+                    fechaVencimiento.getDate() + (cantidadDiasDelMes === 31 ? 15 : 14)
+                );
+                break;
+
+            case 2: // Semanal
+                fechaVencimiento.setDate(fechaVencimiento.getDate() + 6);
+                break;
+
+            default:
+                throw new Error("Tipo de pago no válido");
+        }
+        return fechaVencimiento.toISOString().split('T')[0];
+    };
+    const obtenerDiasDelMes = (fecha) => {
+        const date = new Date(fecha);
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    };
+
+    useEffect(() => {
+        if (data.fecha_pago && data.tipo_pago) {
+            const nuevaFechaVencimiento = calcularFechaVencimiento(data.fecha_pago, data.tipo_pago);
+            setData('fecha_vencimiento', nuevaFechaVencimiento);
+        }
+    }, [data.fecha_pago, data.tipo_pago]);
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route('clientes.store'));
@@ -195,7 +237,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         <TextInput
                             type="number"
                             name="precio"
-                            value={data.precio || ''} 
+                            value={data.precio || ''}
                             onChange={(e) => setData('precio', e.target.value)}
                             className="border rounded p-3 w-full"
                             disabled
@@ -208,7 +250,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         <TextInput
                             type="number"
                             name="descuento"
-                            value={data.descuento || ''} 
+                            value={data.descuento || ''}
                             onChange={(e) => handleDescuentos(e)}
                             className="border rounded p-3 w-full"
                             placeholder="Realiza descuentos"

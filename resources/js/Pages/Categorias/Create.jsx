@@ -2,11 +2,14 @@ import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
+import Checkbox from '@/Components/Checkbox';
 
 const Create = () => {
     const { data, setData, post, processing, errors } = useForm({
         nombre: '',
         icono: '',
+        ingreso:false,
+        egreso:false
     });
 
     const handleSubmit = (e) => {
@@ -48,7 +51,24 @@ const Create = () => {
                     />
                     {errors.icono && <div className="text-red-600">{errors.icono}</div>}
                 </div>
-
+                <div className='flex gap-4 flex-row mt-4 items-center '>
+                    <label htmlFor="ingreso" className="block">Ingreso:</label>
+                    <Checkbox
+                        name="ingreso"
+                        checked={data.ingreso}
+                        onChange={(e) => setData('ingreso', e.target.checked)}
+                        className="border p-3 w-1/24"
+                    />
+                    {errors.ingreso && <div className="text-red-600">{errors.ingreso}</div>}
+                    <label htmlFor="egreso" className="block">Egreso:</label>
+                    <Checkbox
+                        name="egreso"
+                        checked={data.egreso}
+                        onChange={(e) => setData('egreso', e.target.checked)}
+                        className="border p-3 w-1/24"
+                    />
+                    {errors.egreso && <div className="text-red-600">{errors.egreso}</div>}
+                </div>
                 <div className="mt-4">
                     <button
                         type="submit"

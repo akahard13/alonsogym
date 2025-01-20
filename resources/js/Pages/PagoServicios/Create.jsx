@@ -14,6 +14,50 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
         fecha_vencimiento: '', // Inicialmente vacía
     });
     const [precio, setPrecio] = useState(ultimoPago.precio);
+    const calcularFechaVencimiento = (fechaPago, tipoPago) => {
+        const fecha = new Date(fechaPago);
+        let fechaVencimiento = new Date(fecha);
+
+        switch (Number(tipoPago)) {
+            case 4: // Mensual
+                if (fecha.getMonth() === 1 && fecha.getUTCDate() === 1) {
+                    fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth());
+                    fechaVencimiento.setUTCDate(28);
+                }
+                else {
+                    fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth() + 1);
+                    fechaVencimiento.setUTCDate(fechaVencimiento.getUTCDate() - 1);
+                }
+                break;
+
+            case 3: // Quincenal
+                const cantidadDiasDelMes = obtenerDiasDelMes(fechaPago);
+                fechaVencimiento.setDate(
+                    fechaVencimiento.getDate() + (cantidadDiasDelMes === 31 ? 15 : 14)
+                );
+                break;
+
+            case 2: // Semanal
+                fechaVencimiento.setDate(fechaVencimiento.getDate() + 6);
+                break;
+
+            default:
+                throw new Error("Tipo de pago no válido");
+        }
+        return fechaVencimiento.toISOString().split('T')[0];
+    };
+    const obtenerDiasDelMes = (fecha) => {
+        const date = new Date(fecha);
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    };
+
+    useEffect(() => {
+        if (data.fecha_pago && data.tipo_pago) {
+            const nuevaFechaVencimiento = calcularFechaVencimiento(data.fecha_pago, data.tipo_pago);
+            setData('fecha_vencimiento', nuevaFechaVencimiento);
+        }
+    }, [data.fecha_pago, data.tipo_pago]);
+
     const handlePrecio = (e) => {
         const value = e.target.value;
         setData('tipo_pago', value);
@@ -40,11 +84,23 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
             });
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
+        const fechaPago = new Date(data.fecha_pago);
+        const fechaVencimiento = new Date(data.fecha_vencimiento);
+
+        // Convierte las fechas a UTC
+        const fechaPagoUTC = new Date(Date.UTC(fechaPago.getFullYear(), fechaPago.getMonth(), fechaPago.getDate()));
+        const fechaVencimientoUTC = new Date(Date.UTC(fechaVencimiento.getFullYear(), fechaVencimiento.getMonth(), fechaVencimiento.getDate()));
+
+        setData('fecha_pago', fechaPagoUTC.toISOString().split('T')[0]);
+        setData('fecha_vencimiento', fechaVencimientoUTC.toISOString().split('T')[0]);
+
+        // Enviar los datos con las fechas convertidas
+        post(route('pago_servicios.store'));
         post(route('pago_servicios.store'));
     };
+
     const handleDescuentos = (e) => {
         setData('descuento', e.target.value);
         const descuento = parseFloat(e.target.value) || 0; // Convertir el valor a número (o 0 si está vacío)
@@ -163,11 +219,11 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                             value={data.fecha_vencimiento}
                             onChange={(e) => setData('fecha_vencimiento', e.target.value)}
                             className="border rounded p-3 w-full"
+                            disabled
                         />
                         {errors.fecha_vencimiento && <div className="text-red-600 mt-1">{errors.fecha_vencimiento}</div>}
                     </div>
                 </div>
-
                 <div className="mt-6 text-center">
                     <button
                         type="submit"

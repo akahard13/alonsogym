@@ -66,6 +66,18 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Servicios
                                 </NavLink>
+                                <NavLink 
+                                    href={route('ingresos.index')}
+                                    active={route().current('ingresos.index')}
+                                >
+                                    Ingresos
+                                </NavLink>
+                                <NavLink 
+                                    href={route('egresos.index')}
+                                    active={route().current('egresos.index')}
+                                >
+                                    Egresos
+                                </NavLink>
                             </div>
                         </div>
 
@@ -177,8 +189,8 @@ export default function AuthenticatedLayout({ header, children }) {
                             Clientes
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
-                            href={route('clientes.index')}
-                            active={route().current('clientes.index')}
+                            href={route('personal.index')}
+                            active={route().current('personal.index')}
                         >
                             Personal
                         </ResponsiveNavLink>
@@ -187,6 +199,24 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current('servicios.index')}
                         >
                             Servicios
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('categorias.index')}
+                            active={route().current('categorias.index')}
+                        >
+                            Categorias
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('clientes.activos')}
+                            active={route().current('clientes.activos')}
+                        >
+                            Planes
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('clientes.inactivos')}    
+                            active={route().current('clientes.inactivos')}
+                        >
+                            Vencidos
                         </ResponsiveNavLink>
                     </div>
 

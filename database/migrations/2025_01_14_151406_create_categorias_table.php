@@ -13,6 +13,8 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('icono')->nullable();
+            $table->boolean('ingreso')->default(false);
+            $table->boolean('egreso')->default(false);
             $table->timestamps();
         });
 
@@ -21,12 +23,16 @@ return new class extends Migration
             [
                 'nombre' => 'Planes',
                 'icono' => '<RiMoneyDollarCircleLine className="w-8 h-8" title="Pagar" />',
+                'ingreso' => true,
+                'egreso' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'nombre' => 'Salarios',
                 'icono' => '<RiMoneyDollarCircleLine className="w-8 h-8" title="Pagar" />',
+                'ingreso' => false,
+                'egreso' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
