@@ -23,15 +23,16 @@ class IngresosController extends Controller
             'datos' => $ingresos,
             'editar' => 'ingresos.edit',
             'eliminar' => 'ingresos.destroy',
-            'create' => 'ingresos.create'
+            'create' => 'ingresos.create',
+            'titulo' => 'Ingresos'
         ]);
     }
     public function create()
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            Categorias::all();
-            return Inertia::render('Finanzas/Create', ['categorias' => Categorias::all(), 'store' => 'ingresos.store']);
+            $categorias=Categorias::where('ingreso', true)->get();
+            return Inertia::render('Finanzas/Create', ['categorias' => $categorias, 'store' => 'ingresos.store']);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }

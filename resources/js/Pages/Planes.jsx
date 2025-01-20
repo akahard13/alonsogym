@@ -7,6 +7,7 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { AdminRol } from '@/Info/Roles';
 import ConfirmModal from '@/Components/ConfirmModal';
 const Planes = ({ clientes, auth }) => {
+    console.log(clientes);
     const [searchTerm, setSearchTerm] = useState('');
     const clientesArray = Array.isArray(clientes) ? clientes : Object.values(clientes);
     const [showModal, setShowModal] = useState(false);
@@ -88,9 +89,9 @@ const Planes = ({ clientes, auth }) => {
                                 </td>
                                 <td className="text-left px-4 py-2">
                                     <span
-                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${cliente.estado ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${cliente.estado ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"}`}
                                     >
-                                        {cliente.estado ? "Activo" : "Inactivo"}
+                                        {cliente.dias_restantes_numerico < 0 ? 'Vencido' : cliente.dias_restantes}
                                     </span>
 
                                 </td>

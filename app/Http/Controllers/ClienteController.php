@@ -161,11 +161,20 @@ class ClienteController extends Controller
                 'g.nombre as genero',
                 's.nombre as servicio',
                 DB::raw('CASE 
-                         WHEN NOW() BETWEEN ps.fecha_pago AND ps.fecha_vencimiento THEN true
-                         ELSE false 
-                     END AS estado')
+                     WHEN NOW()::date <= ps.fecha_vencimiento::date THEN true 
+                     ELSE false 
+                 END AS estado'),
+                DB::raw('CASE 
+                     WHEN NOW()::date = ps.fecha_vencimiento::date THEN \'Último día\' 
+                     ELSE ((ps.fecha_vencimiento::date - NOW()::date)::text || \' días\') 
+                 END AS dias_restantes'),
+                DB::raw('ps.fecha_vencimiento::date - NOW()::date AS dias_restantes_numerico')
             )
+            ->orderBy('dias_restantes_numerico', 'asc')
             ->get();
+
+
+
         $clientes = $clientes->filter(function ($cliente) use ($estado) {
             return $cliente->estado == $estado;
         });

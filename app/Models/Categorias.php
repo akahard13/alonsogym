@@ -11,7 +11,7 @@ class Categorias extends Model
 
     protected $table = 'categorias';
 
-    protected $fillable = ['nombre', 'icono'];
+    protected $fillable = ['nombre', 'icono', 'ingreso', 'egreso'];
 
     public function egresos()
     {

@@ -39,17 +39,26 @@ class CategoriasController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
+            // Validación
             $request->validate([
                 'nombre' => 'required|string|max:255',
                 'icono' => 'nullable|string',
+                'egreso' => 'boolean',
+                'ingreso' => 'boolean',
             ]);
 
-            Categorias::create($request->all());
+            // Forzar conversión a booleano
+            $data = $request->all();
+            $data['ingreso'] = filter_var($data['ingreso'], FILTER_VALIDATE_BOOLEAN);
+            $data['egreso'] = filter_var($data['egreso'], FILTER_VALIDATE_BOOLEAN);
+
+            Categorias::create($data);
 
             return redirect()->route('categorias.index')->with('success', 'Categoría creada correctamente.');
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');
     }
+
 
     public function edit(Categorias $categoria)
     {
@@ -67,6 +76,8 @@ class CategoriasController extends Controller
             $request->validate([
                 'nombre' => 'required|string|max:255',
                 'icono' => 'nullable|string',
+                'egreso' => 'nullable|boolean',
+                'ingreso' => 'nullable|boolean',
             ]);
 
             $categoria->update($request->all());
