@@ -39,8 +39,19 @@ class PagoServiciosController extends Controller
             }
 
             $clienteData = Cliente::with('genero')->find($cliente->id);
-            
-            $pagos = PagoServicio::with('servicio', 'tipoPago')->where('cliente', $cliente->id)->orderBy('fecha_pago', 'desc')->get();
+
+            $pagos = DB::table('pago_servicios as ps')
+                ->join('servicios', 'ps.servicio', '=', 'servicios.id')
+                ->join('tipo_pagos_servicios as tipo_pago', 'ps.tipo_pago', '=', 'tipo_pago.id')
+                ->where('ps.cliente', $cliente->id)
+                ->orderBy('ps.fecha_pago', 'desc')
+                ->select(
+                    'ps.*',
+                    'servicios.nombre as servicio', // Asegúrate de que 'nombre' es el campo que quieres de la tabla 'servicios'
+                    'tipo_pago.nombre as tipo_pago' // Asegúrate de que 'nombre' es el campo que quieres de la tabla 'tipo_pago'
+                )
+                ->get();
+
             $ultimo_pago = $this->ultimo_pago($cliente->id);
 
             return Inertia::render('PagoServicios/Main', [
@@ -66,7 +77,8 @@ class PagoServiciosController extends Controller
                 ->where('pps.cliente', $id)
                 ->orderByDesc('pps.fecha_pago')
                 ->first();
-            return $ultimopago ? $ultimopago : ["precio" => '0.00'];
+                $fecha=new DateTime();
+            return $ultimopago ? $ultimopago : ["precio" => '0.00', "fecha_pago" =>  $fecha->format('Y-m-d H:i:s'), 'id_servicio' => 1];
         } catch (\Exception $e) {
             return null;
         }
@@ -104,14 +116,6 @@ class PagoServiciosController extends Controller
             DB::beginTransaction();
 
             try {
-                $existingPayment = PagoServicio::where('cliente', $request->cliente)
-                    ->where('servicio', $request->servicio)
-                    ->where('fecha_pago', $request->fecha_pago)
-                    ->first();
-
-                if ($existingPayment) {
-                    return back()->withErrors(['error' => 'Ya se ha registrado un pago para este servicio en la misma fecha.']);
-                }
                 $fecha_pago = new DateTime($request->fecha_pago);
                 $fecha_vencimiento = new DateTime($request->fecha_vencimiento);
                 PagoServicio::create([

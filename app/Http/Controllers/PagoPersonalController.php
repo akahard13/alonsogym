@@ -34,7 +34,6 @@ class PagoPersonalController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            $personales = Personal::all(); // Obtener todos los registros de personal
             return Inertia::render('PagosPersonal/Create', ['persona' => $personal]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');

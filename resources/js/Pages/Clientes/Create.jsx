@@ -93,7 +93,6 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
 
 
     const handleSubmitPago = (e) => {
-        console.log(data);
         e.preventDefault();
         post(route('clientes.pago'));
     };

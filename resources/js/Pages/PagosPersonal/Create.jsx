@@ -16,8 +16,6 @@ const Create = ({ persona }) => {
     const handleSalarioChange = (e) => {
         const checked = e.target.checked;
         setData('salario', checked);
-
-        // Si el checkbox está marcado, asignamos la descripción automática
         if (checked) {
             setData('monto', persona.salario);
             setData('descripcion', `Pago de salario correspondiente a ${persona.nombres} ${persona.apellidos}`);
@@ -29,7 +27,6 @@ const Create = ({ persona }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route('pago_personal.store'));
     };
 

@@ -11,18 +11,12 @@ const Create = ({ tipo_pagos }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Procesar los datos para obtener los dos arrays
         const ids = [];
         const valores = [];
         for (const [id, valor] of Object.entries(data.modalidades)) {
-            ids.push(id); // Guardar el ID de la modalidad
-            valores.push(valor); // Guardar el valor ingresado
+            ids.push(id);
+            valores.push(valor);
         }
-
-        console.log({ ids, valores }); // Verificar los datos antes de enviarlos
-
-        // Enviar los datos al backend
         post(route('servicios.store'), { preserveScroll: true });
     };
 

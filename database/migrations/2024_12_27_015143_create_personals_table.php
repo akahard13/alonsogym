@@ -21,7 +21,7 @@ return new class extends Migration
                   ->constrained('generos')
                   ->onDelete('cascade'); // Elimina el registro si el género asociado es eliminado
             $table->string('cargo'); // Cargo del personal
-            $table->string('celular'); // Número de celular del personal
+            $table->string('celular')->nullable(); // Número de celular del personal
             $table->date('fecha_contratacion'); // Fecha de contratación
             $table->decimal('salario', 8, 2); // Salario del personal (máximo 8 dígitos y 2 decimales)
             $table->timestamps(); // Campos created_at y updated_at

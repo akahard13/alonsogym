@@ -7,7 +7,6 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { AdminRol } from '@/Info/Roles';
 import ConfirmModal from '@/Components/ConfirmModal';
 const Planes = ({ clientes, auth }) => {
-    console.log(clientes);
     const [searchTerm, setSearchTerm] = useState('');
     const clientesArray = Array.isArray(clientes) ? clientes : Object.values(clientes);
     const [showModal, setShowModal] = useState(false);

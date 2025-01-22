@@ -4,16 +4,29 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 
 const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
-    const { data, setData, post, get, processing, errors } = useForm({
+    // Calcular la fecha de vencimiento inicial
+    let fechaVencimientoInicial = ultimoPago ? new Date(ultimoPago.fecha_vencimiento) : null;
+
+    if (fechaVencimientoInicial && !isNaN(fechaVencimientoInicial)) {
+        fechaVencimientoInicial.setDate(fechaVencimientoInicial.getDate() + 1);
+    } else {
+        fechaVencimientoInicial = new Date();
+    }
+
+    // Inicializar el formulario con useForm de Inertia.js
+    const { data, setData, post, processing, errors } = useForm({
         cliente: cliente.id,
-        fecha_pago: '',
-        servicio: '' | ultimoPago.id_servicio,
-        tipo_pago: '' | ultimoPago.id_tipo_pago,
+        fecha_pago: fechaVencimientoInicial.toISOString().split('T')[0],
+        servicio: ultimoPago.id_servicio,
+        tipo_pago: ultimoPago.id_tipo_pago,
         precio: ultimoPago.precio,
         descuento: '0.00',
-        fecha_vencimiento: '', // Inicialmente vacía
+        fecha_vencimiento: '',
     });
+
     const [precio, setPrecio] = useState(ultimoPago.precio);
+
+    // Función para calcular la fecha de vencimiento
     const calcularFechaVencimiento = (fechaPago, tipoPago) => {
         const fecha = new Date(fechaPago);
         let fechaVencimiento = new Date(fecha);
@@ -23,8 +36,7 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                 if (fecha.getMonth() === 1 && fecha.getUTCDate() === 1) {
                     fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth());
                     fechaVencimiento.setUTCDate(28);
-                }
-                else {
+                } else {
                     fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth() + 1);
                     fechaVencimiento.setUTCDate(fechaVencimiento.getUTCDate() - 1);
                 }
@@ -46,11 +58,14 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
         }
         return fechaVencimiento.toISOString().split('T')[0];
     };
+
+    // Función para obtener los días del mes
     const obtenerDiasDelMes = (fecha) => {
         const date = new Date(fecha);
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     };
 
+    // Efecto para calcular la fecha de vencimiento cuando cambia la fecha de pago o el tipo de pago
     useEffect(() => {
         if (data.fecha_pago && data.tipo_pago) {
             const nuevaFechaVencimiento = calcularFechaVencimiento(data.fecha_pago, data.tipo_pago);
@@ -58,11 +73,11 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
         }
     }, [data.fecha_pago, data.tipo_pago]);
 
+    // Manejar cambios en el tipo de pago y obtener el precio
     const handlePrecio = (e) => {
         const value = e.target.value;
         setData('tipo_pago', value);
 
-        // Asegúrate de que los parámetros están correctamente pasados
         const url = route('pago_servicios.obtener_precio', {
             servicio: data.servicio,
             tipo_pago: value
@@ -84,28 +99,35 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
             });
     };
 
+    // Manejar el envío del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (processing) return; // Evitar múltiples envíos
+
         const fechaPago = new Date(data.fecha_pago);
         const fechaVencimiento = new Date(data.fecha_vencimiento);
 
-        // Convierte las fechas a UTC
+        // Validar las fechas antes de enviarlas
+        if (isNaN(fechaPago.getTime()) || isNaN(fechaVencimiento.getTime())) {
+            console.error('Fecha inválida');
+            return;
+        }
+
         const fechaPagoUTC = new Date(Date.UTC(fechaPago.getFullYear(), fechaPago.getMonth(), fechaPago.getDate()));
         const fechaVencimientoUTC = new Date(Date.UTC(fechaVencimiento.getFullYear(), fechaVencimiento.getMonth(), fechaVencimiento.getDate()));
 
         setData('fecha_pago', fechaPagoUTC.toISOString().split('T')[0]);
         setData('fecha_vencimiento', fechaVencimientoUTC.toISOString().split('T')[0]);
 
-        // Enviar los datos con las fechas convertidas
-        post(route('pago_servicios.store'));
         post(route('pago_servicios.store'));
     };
 
+    // Manejar cambios en el descuento
     const handleDescuentos = (e) => {
         setData('descuento', e.target.value);
-        const descuento = parseFloat(e.target.value) || 0; // Convertir el valor a número (o 0 si está vacío)
-        const nuevoPrecio = (parseFloat(precio) || 0) - descuento; // Restar el descuento
-        setData('precio', nuevoPrecio.toFixed(2)); // Actualizar precio con 2 decimales
+        const descuento = parseFloat(e.target.value) || 0;
+        const nuevoPrecio = (parseFloat(precio) || 0) - descuento;
+        setData('precio', nuevoPrecio.toFixed(2));
     };
 
     return (
@@ -120,7 +142,6 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
             <h1 className="text-2xl font-bold mb-6 text-center">Registrar nuevo pago cliente</h1>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Cliente, Plan, y Modalidad */}
                     <div>
                         <label htmlFor="clientel" className="block font-semibold mb-2">Cliente</label>
                         <select
@@ -172,19 +193,17 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                     </div>
                 </div>
 
-                {/* Fecha de Pago, Precio y Descuento */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <div>
                         <label htmlFor="precio" className="block font-semibold mb-2">Precio</label>
                         <TextInput
                             type="number"
                             name="precio"
-                            value={data.precio || ''}  // Si data.precio es undefined, usa una cadena vacía
+                            value={data.precio || ''}
                             onChange={(e) => setData('precio', e.target.value)}
                             className="border rounded p-3 w-full"
                             disabled
                         />
-
                         {errors.monto && <div className="text-red-600 mt-1">{errors.monto}</div>}
                     </div>
                     <div>
@@ -192,12 +211,11 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                         <TextInput
                             type="number"
                             name="descuento"
-                            value={data.descuento || ''}  // Si data.descuento es undefined, usa una cadena vacía
+                            value={data.descuento || ''}
                             onChange={(e) => handleDescuentos(e)}
                             className="border rounded p-3 w-full"
                             placeholder="Realiza descuentos"
                         />
-
                         {errors.descripcion && <div className="text-red-600 mt-1">{errors.descripcion}</div>}
                     </div>
                     <div>
@@ -219,22 +237,21 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                             value={data.fecha_vencimiento}
                             onChange={(e) => setData('fecha_vencimiento', e.target.value)}
                             className="border rounded p-3 w-full"
-                            disabled
                         />
                         {errors.fecha_vencimiento && <div className="text-red-600 mt-1">{errors.fecha_vencimiento}</div>}
                     </div>
                 </div>
-                <div className="mt-6 text-center">
+
+                <div className="flex justify-center mt-8">
                     <button
                         type="submit"
+                        className="bg-blue-500 text-white py-2 px-6 rounded-full"
                         disabled={processing}
-                        className="bg-cyan-900 text-white px-6 py-3 rounded hover:bg-cyan-600 font-semibold"
                     >
-                        {processing ? 'Guardando...' : 'Guardar'}
+                        {processing ? 'Cargando...' : 'Registrar Pago'}
                     </button>
                 </div>
             </form>
-
         </AuthenticatedLayout>
     );
 };

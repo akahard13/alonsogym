@@ -18,7 +18,7 @@ class ClienteController extends Controller
     protected $admin;
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL',1);
+        $this->admin = env('ADMIN_ROL', 1);
     }
     public function create()
     {
@@ -37,10 +37,19 @@ class ClienteController extends Controller
         if ($user_rol == $this->admin) {
             $request->validate([
                 'nombre' => 'required|string|max:255',
+                //'fecha_nacimiento' => 'required|date',
+                //'celular' => 'required|string|max:15',
                 'genero' => 'required|exists:generos,id',
+                //'huella' => 'nullable|string|max:255',
+                //'codigo' => 'required|string|max:255|unique:clientes,codigo,' . $cliente->id,
             ]);
 
-            Cliente::create($request->all());
+            $nombre = ucwords(strtolower($request->nombre));
+
+            Cliente::create([
+                'nombre' => $nombre,
+                'genero' => $request->genero,
+            ]);
 
             return redirect()->route('clientes.index')->with('success', 'Cliente creado correctamente.');
         }
@@ -52,11 +61,11 @@ class ClienteController extends Controller
         if ($user_rol == $this->admin) {
             $request->validate([
                 'nombre' => 'required|string|max:255',
-                'fecha_nacimiento' => 'required|date',
-                'celular' => 'required|string|max:15',
+                //'fecha_nacimiento' => 'required|date',
+                //'celular' => 'required|string|max:15',
                 'genero' => 'required|exists:generos,id',
-                'huella' => 'nullable|string|max:255',
-                'codigo' => 'required|string|max:255|unique:clientes,codigo',
+                //'huella' => 'nullable|string|max:255',
+                //'codigo' => 'required|string|max:255|unique:clientes,codigo',
                 'servicio' => 'required|exists:servicios,id',
                 'tipo_pago' => 'required|exists:tipo_pagos_servicios,id',
                 'fecha_pago' => 'required|date',
@@ -117,14 +126,18 @@ class ClienteController extends Controller
         if ($user_rol == $this->admin) {
             $request->validate([
                 'nombre' => 'required|string|max:255',
-                'fecha_nacimiento' => 'required|date',
-                'celular' => 'required|string|max:15',
+                //'fecha_nacimiento' => 'required|date',
+                //'celular' => 'required|string|max:15',
                 'genero' => 'required|exists:generos,id',
-                'huella' => 'nullable|string|max:255',
-                'codigo' => 'required|string|max:255|unique:clientes,codigo,' . $cliente->id,
+                //'huella' => 'nullable|string|max:255',
+                //'codigo' => 'required|string|max:255|unique:clientes,codigo,' . $cliente->id,
             ]);
+            $nombre = ucwords(strtolower($request->nombre));
 
-            $cliente->update($request->all());
+            $cliente->update([
+                'nombre' => $nombre,
+                'genero' => $request->genero,
+            ]);
 
             return redirect()->route('clientes.index')->with('success', 'Cliente actualizado correctamente.');
         }

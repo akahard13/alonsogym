@@ -8,6 +8,13 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const { delete: destroy } = useForm();
+    const formatDate = (date) => {
+        const d = new Date(date);
+        const day = d.getDate().toString().padStart(2, '0'); // Añadir cero delante si el día es menor a 10
+        const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Los meses empiezan desde 0, así que sumamos 1
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+    };
     
     const handleDeleteClick = (id) => {
         setSelectedId(id);
@@ -22,19 +29,6 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
     const { flash } = usePage().props;
     const rol = auth.user.rol;
 
-    // Función para formatear fechas en formato dd/mm/yyyy
-    const formatDate = (date, tipo) => {
-        console.log(tipo,date);
-        const newDate = new Date(date + 'T00:00:00Z'); // Asegurarse de que la fecha sea UTC
-        if (isNaN(newDate.getTime())) return ''; // Validación para evitar errores si la fecha es inválida
-
-        const day = newDate.getUTCDate().toString().padStart(2, '0'); // Asegura dos dígitos
-        const month = (newDate.getUTCMonth() + 1).toString().padStart(2, '0'); // Meses empiezan desde 0, por eso sumamos 1
-        const year = newDate.getUTCFullYear();
-
-        return `${day}/${month}/${year}`;
-    };
-
     return (
         <AuthenticatedLayout
             header={
@@ -43,7 +37,7 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
                 </h2>
             }>
             <Head title="Pagos de Servicios" />
-            
+
             {rol === AdminRol && (
                 <Link
                     href={route('pago_servicios.create', information.id)}
@@ -52,7 +46,7 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
                     Nuevo Pago
                 </Link>
             )}
-            
+
             {flash.success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">{flash.success}</div>}
             {flash.permission && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mt-4">{flash.permission}</div>}
 
@@ -73,12 +67,12 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
                         <div className="flex items-center">
                             <div className="flex-shrink-0">
                                 <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-md bg-green-100 text-green-800">
-                                    {ultimoPago && ultimoPago.fecha_pago && !isNaN(new Date(ultimoPago.fecha_pago)) && (
+                                    {ultimoPago && ultimoPago.fecha_pago && ultimoPago.fecha_vencimiento && !isNaN(new Date(ultimoPago.fecha_pago)) && (
                                         <div className="mt-2 text-sm text-gray-700">
                                             <div className="font-semibold">Último Pago:</div>
                                             <div className="border-b border-gray-400">
-                                                <span className="font-medium"></span>{' '}
-                                                {formatDate(ultimoPago.fecha_pago, 'fecha de pago')}  {/* Llamamos a la función de formato */}
+                                                <span className="font-medium"></span>
+                                                {formatDate(ultimoPago.fecha_pago)}
                                             </div>
                                             <div className="border-b border-gray-400">
                                                 <span className="font-medium"></span> {ultimoPago.servicio}
@@ -107,7 +101,7 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
                                     <div className="ms-4">
                                         <div className="text-sm font-medium text-gray-900">
                                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-200 text-gray-800">
-                                                Fecha de Pago: {formatDate(pago.fecha_pago, 'fecha de pago')} {/* Llamamos a la función de formato */}
+                                                Fecha de Pago: {formatDate(pago.fecha_pago)} {/* Llamamos a la función de formato */}
                                             </span>
                                         </div>
                                     </div>
@@ -116,7 +110,7 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
                                     <div className="ms-4">
                                         <div className="text-sm font-medium text-gray-900">
                                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-200 text-yellow-800">
-                                                Servicio: {pago.servicio.nombre} - {pago.tipo_pago.nombre}
+                                                Servicio: {pago.servicio} - {pago.tipo_pago}
                                             </span>
                                         </div>
                                     </div>
@@ -134,7 +128,7 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0">
                                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Vence: {formatDate(pago.fecha_vencimiento, 'fecha de vencimiento')} {/* Llamamos a la función de formato */}
+                                            Vence: {formatDate(pago.fecha_vencimiento)} {/* Llamamos a la función de formato */}
                                         </span>
                                     </div>
                                 </div>
