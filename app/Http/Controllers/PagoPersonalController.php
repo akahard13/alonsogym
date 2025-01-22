@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Egresos;
 use App\Models\PagoPersonal;
 use App\Models\Personal;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -17,7 +18,7 @@ class PagoPersonalController extends Controller
 
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL',1);
+        $this->admin = env('ADMIN_ROL', 1);
     }
 
     public function index(Personal $personal): Response
@@ -44,12 +45,20 @@ class PagoPersonalController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             $request->validate([
-                'personal' => 'required|exists:personal,id', // Validar que el personal exista
+                'personal' => 'required|exists:personal,id',
                 'fecha_pago' => 'required|date',
                 'monto' => 'required|numeric|min:0',
                 'descripcion' => 'nullable|string|max:255',
             ]);
-            PagoPersonal::create($request->all()); // Crear nuevo registro de pago personal
+            $fecha_pago = new DateTime($request->fecha_pago);
+            PagoPersonal::create(
+                [
+                    'personal' => $request->personal,
+                    'fecha_pago' => $fecha_pago->format('Y-m-d'),
+                    'monto' => $request->monto,
+                    'descripcion' => $request->descripcion
+                ]
+            );
             //registramos el egreso
             Egresos::create([
                 'categoria' => 2, // Categoría de egreso para pagos de salario

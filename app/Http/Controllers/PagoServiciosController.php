@@ -133,7 +133,7 @@ class PagoServiciosController extends Controller
                     'categoria' => 1,
                     'fecha' => $fecha_pago->format('Y-m-d'),
                     'total' => $request->precio,
-                    'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto de $tipo_pago->nombre del servicio $servicio->nombre"
+                    'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto del servicio $servicio->nombre $tipo_pago->nombre"
                 ]);
                 DB::commit();
                 return redirect()->route('pago_servicios.index', ['cliente' => $request->cliente])

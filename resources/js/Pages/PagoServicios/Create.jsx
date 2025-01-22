@@ -33,7 +33,7 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
 
         switch (Number(tipoPago)) {
             case 4: // Mensual
-                if (fecha.getMonth() === 1 && fecha.getUTCDate() === 1) {
+                if (fecha.getUTCMonth() === 1 && fecha.getUTCDate() === 1) {
                     fechaVencimiento.setUTCMonth(fechaVencimiento.getUTCMonth());
                     fechaVencimiento.setUTCDate(28);
                 } else {

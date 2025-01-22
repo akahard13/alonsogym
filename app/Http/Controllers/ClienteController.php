@@ -8,6 +8,7 @@ use App\Models\Ingresos;
 use App\Models\PagoServicio;
 use App\Models\Servicio;
 use App\Models\TipoPagoServicio;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,6 @@ class ClienteController extends Controller
             ]);
 
             $nombre = ucwords(strtolower($request->nombre));
-            dd($nombre);
             Cliente::create([
                 'nombre' => $nombre,
                 'genero' => $request->genero,
@@ -91,11 +91,12 @@ class ClienteController extends Controller
                 'precio' => $request->precio,
                 'fecha_vencimiento' => $request->fecha_vencimiento
             ]);
+            $fecha_ingreso = new DateTime();
             Ingresos::create([
                 'categoria' => 1,
-                'fecha' => $request->fecha_pago,
+                'fecha' => $fecha_ingreso->format('Y-m-d'),
                 'total' => $request->precio,
-                'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto de $tipo_pago->nombre del servicio $servicio->nombre"
+                'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto del servicio $servicio->nombre $tipo_pago->nombre"
             ]);
 
             return redirect()->route('clientes.index')->with('success', 'Cliente creado correctamente.');

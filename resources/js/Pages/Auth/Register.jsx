@@ -6,7 +6,6 @@ import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Register({ roles }) {
-    console.log(roles);
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
