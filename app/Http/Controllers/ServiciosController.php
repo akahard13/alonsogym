@@ -14,7 +14,7 @@ class ServiciosController extends Controller
     protected $admin;
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL');
+        $this->admin = env('ADMIN_ROL',1);
     }
     public function create()
     {

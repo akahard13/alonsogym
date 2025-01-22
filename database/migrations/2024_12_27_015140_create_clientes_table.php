@@ -16,13 +16,13 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->date('fecha_nacimiento');
-            $table->string('celular');
+            $table->date('fecha_nacimiento')->nullable();
+            $table->string('celular')->nullable();
             $table->foreignId('genero')
                 ->constrained('generos')
                 ->onDelete('cascade');
             $table->string('huella')->nullable();
-            $table->string('codigo')->unique();
+            $table->string('codigo')->unique()->nullable();
             $table->timestamps();
         });
     }

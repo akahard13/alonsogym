@@ -17,7 +17,7 @@ class PagoPersonalController extends Controller
 
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL');
+        $this->admin = env('ADMIN_ROL',1);
     }
 
     public function index(Personal $personal): Response

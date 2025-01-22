@@ -11,6 +11,7 @@ use App\Models\Personal;
 use App\Models\PrecioServicio;
 use App\Models\Servicio;
 use App\Models\TipoPagoServicio;
+use DateTime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Whoops\Exception\Formatter;
 
 class PagoServiciosController extends Controller
 {
@@ -25,7 +27,7 @@ class PagoServiciosController extends Controller
 
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL');
+        $this->admin = env('ADMIN_ROL', 1);
     }
 
     public function index(Cliente $cliente): Response
@@ -37,7 +39,8 @@ class PagoServiciosController extends Controller
             }
 
             $clienteData = Cliente::with('genero')->find($cliente->id);
-            $pagos = PagoServicio::with('servicio', 'tipoPago')->where('cliente', $cliente->id)->get();
+            
+            $pagos = PagoServicio::with('servicio', 'tipoPago')->where('cliente', $cliente->id)->orderBy('fecha_pago', 'desc')->get();
             $ultimo_pago = $this->ultimo_pago($cliente->id);
 
             return Inertia::render('PagoServicios/Main', [
@@ -60,11 +63,8 @@ class PagoServiciosController extends Controller
                 ->select('pps.*', 'tps.nombre as tipo_pago', 's.nombre as servicio', 'tps.id as id_tipo_pago', 's.id as id_servicio')
                 ->leftJoin('tipo_pagos_servicios as tps', 'pps.tipo_pago', '=', 'tps.id')
                 ->leftJoin('servicios as s', 'pps.servicio', '=', 's.id')
-                ->where('fecha_pago', function ($query) use ($id) {
-                    $query->selectRaw('MAX(fecha_pago)')
-                        ->from('pago_servicios')
-                        ->where('cliente', $id);
-                })
+                ->where('pps.cliente', $id)
+                ->orderByDesc('pps.fecha_pago')
                 ->first();
             return $ultimopago ? $ultimopago : ["precio" => '0.00'];
         } catch (\Exception $e) {
@@ -100,29 +100,49 @@ class PagoServiciosController extends Controller
                 'precio' => 'required|numeric|min:0',
                 'fecha_vencimiento' => 'required|date',
             ]);
-            $cliente = Cliente::find($request->cliente);
-            $servicio = Servicio::find($request->servicio);
-            $tipo_pago = TipoPagoServicio::find($request->tipo_pago);
-            //dd("Ingreso correspondiente a pago de $cliente->nombre por concepto del servicio $tipo_pago->nombre $servicio->nombre");
-            PagoServicio::create([
-                'cliente' => $request->cliente,
-                'servicio' => $request->servicio,
-                'tipo_pago' => $request->tipo_pago,
-                'fecha_pago' => $request->fecha_pago,
-                'precio' => $request->precio,
-                'fecha_vencimiento' => $request->fecha_vencimiento
-            ]); // Crear nuevo registro de pago personal
-            //registramos el ingreso
-            Ingresos::create([
-                'categoria' => 1, // Categoría de ingreso para pagos de servicios de los clientes
-                'fecha' => $request->fecha_pago,
-                'total' => $request->precio,
-                'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto de $tipo_pago->nombre del servicio $servicio->nombre"
-            ]);
-            return redirect()->route('pago_servicios.index', ['cliente' => $request->cliente])->with('success', 'Pago registrado correctamente.');
+
+            DB::beginTransaction();
+
+            try {
+                $existingPayment = PagoServicio::where('cliente', $request->cliente)
+                    ->where('servicio', $request->servicio)
+                    ->where('fecha_pago', $request->fecha_pago)
+                    ->first();
+
+                if ($existingPayment) {
+                    return back()->withErrors(['error' => 'Ya se ha registrado un pago para este servicio en la misma fecha.']);
+                }
+                $fecha_pago = new DateTime($request->fecha_pago);
+                $fecha_vencimiento = new DateTime($request->fecha_vencimiento);
+                PagoServicio::create([
+                    'cliente' => $request->cliente,
+                    'servicio' => $request->servicio,
+                    'tipo_pago' => $request->tipo_pago,
+                    'fecha_pago' => $fecha_pago->format('Y-m-d'),
+                    'precio' => $request->precio,
+                    'fecha_vencimiento' => $fecha_vencimiento->format('Y-m-d')
+                ]);
+                $cliente = Cliente::find($request->cliente);
+                $servicio = Servicio::find($request->servicio);
+                $tipo_pago = TipoPagoServicio::find($request->tipo_pago);
+                Ingresos::create([
+                    'categoria' => 1,
+                    'fecha' => $fecha_pago->format('Y-m-d'),
+                    'total' => $request->precio,
+                    'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto de $tipo_pago->nombre del servicio $servicio->nombre"
+                ]);
+                DB::commit();
+                return redirect()->route('pago_servicios.index', ['cliente' => $request->cliente])
+                    ->with('success', 'Pago registrado correctamente.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return back()->withErrors(['error' => 'Ocurrió un error al registrar el pago: ' . $e->getMessage()]);
+            }
         }
+
         return Inertia::render('NoPermissions');
     }
+
     public function edit(PagoPersonal $pagoPersonal): RedirectResponse|Response
     {
         $user_rol = Auth::user()->rol;
@@ -144,12 +164,22 @@ class PagoServiciosController extends Controller
                 'descripcion' => 'nullable|string|max:255',
             ]);
 
-            $pagoPersonal->update($request->all()); // Actualizar el registro de pago personal
+            // Formatear las fechas para que se guarden en formato 'Y-m-d'
+            $fecha_pago = new DateTime($request->fecha_pago);
+            $fecha_pago_formatted = $fecha_pago->format('Y-m-d');
+
+            // Actualizar el registro de pago personal
+            $pagoPersonal->update([
+                'fecha_pago' => $fecha_pago_formatted,
+                'monto' => $request->monto,
+                'descripcion' => $request->descripcion,
+            ]);
 
             return redirect()->route('pago_personal.index')->with('success', 'Pago actualizado correctamente.');
         }
         return Inertia::render('NoPermissions');
     }
+
 
     public function destroy(PagoPersonal $pagoPersonal): RedirectResponse
     {

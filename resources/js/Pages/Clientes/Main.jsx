@@ -27,10 +27,10 @@ const Main = ({ clientes, auth }) => {
 
     // Filtra los clientes según el término de búsqueda
     const filteredClientes = clientes.filter((cliente) => 
-        cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        cliente.codigo.toLowerCase().includes(searchTerm.toLowerCase())
+        (cliente.nombre && cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase())) || 
+        (cliente.codigo && cliente.codigo.toLowerCase().includes(searchTerm.toLowerCase()))
     );
-
+    
     return (
         <AuthenticatedLayout
             header={

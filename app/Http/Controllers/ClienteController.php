@@ -18,7 +18,7 @@ class ClienteController extends Controller
     protected $admin;
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL');
+        $this->admin = env('ADMIN_ROL',1);
     }
     public function create()
     {
@@ -37,11 +37,7 @@ class ClienteController extends Controller
         if ($user_rol == $this->admin) {
             $request->validate([
                 'nombre' => 'required|string|max:255',
-                'fecha_nacimiento' => 'required|date',
-                'celular' => 'required|string|max:15',
                 'genero' => 'required|exists:generos,id',
-                'huella' => 'nullable|string|max:255',
-                'codigo' => 'required|string|max:255|unique:clientes,codigo',
             ]);
 
             Cliente::create($request->all());
