@@ -45,7 +45,7 @@ class ClienteController extends Controller
             ]);
 
             $nombre = ucwords(strtolower($request->nombre));
-
+            dd($nombre);
             Cliente::create([
                 'nombre' => $nombre,
                 'genero' => $request->genero,
@@ -72,7 +72,15 @@ class ClienteController extends Controller
                 'precio' => 'required|numeric|min:0',
                 'fecha_vencimiento' => 'required|date',
             ]);
-            $cliente = Cliente::create($request->all());
+            $nombre = ucwords(strtolower($request->nombre));
+            $cliente = Cliente::create([
+                'nombre' => $nombre,
+                'huella' => $request->huella,
+                'celular' => $request->celular,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'codigo' => $request->codigo,
+                'genero' => $request->genero,
+            ]);
             $servicio = Servicio::find($request->servicio);
             $tipo_pago = TipoPagoServicio::find($request->tipo_pago);
             PagoServicio::create([
@@ -82,10 +90,9 @@ class ClienteController extends Controller
                 'fecha_pago' => $request->fecha_pago,
                 'precio' => $request->precio,
                 'fecha_vencimiento' => $request->fecha_vencimiento
-            ]); // Crear nuevo registro de pago personal
-            //registramos el ingreso
+            ]);
             Ingresos::create([
-                'categoria' => 1, // Categoría de ingreso para pagos de servicios de los clientes
+                'categoria' => 1,
                 'fecha' => $request->fecha_pago,
                 'total' => $request->precio,
                 'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto de $tipo_pago->nombre del servicio $servicio->nombre"
@@ -136,6 +143,10 @@ class ClienteController extends Controller
 
             $cliente->update([
                 'nombre' => $nombre,
+                'huella' => $request->huella,
+                'celular' => $request->celular,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'codigo' => $request->codigo,
                 'genero' => $request->genero,
             ]);
 

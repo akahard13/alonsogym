@@ -50,7 +50,7 @@ const Main = ({ categorias, auth }) => {
                     <tr className="bg-gray-200">
                         <th className="text-left px-4 py-2">ID</th>
                         <th className="text-left px-4 py-2">Nombre</th>
-                        <th className="text-left px-4 py-2">Ícono</th>
+                        {/* <th className="text-left px-4 py-2">Ícono</th> */}
                         {isAdmin && (<th className="text-center px-4 py-2">Acciones</th>)}
                     </tr>
                 </thead>
@@ -59,7 +59,7 @@ const Main = ({ categorias, auth }) => {
                         <tr key={categoria.id} className="items-center">
                             <td className="text-left px-4 py-2">{categoria.id}</td>
                             <td className="text-left px-4 py-2">{categoria.nombre}</td>
-                            <td className="text-left px-4 py-2">{categoria.icono}</td>
+                            {/* <td className="text-left px-4 py-2">{categoria.icono}</td> */}
                             {isAdmin && categoria.id !== 1 && categoria.id !== 2 && (
                                 <td className="flex justify-around space-x-4">
                                     <Link

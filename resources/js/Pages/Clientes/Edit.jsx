@@ -13,14 +13,13 @@ const Edit = ({ cliente, generos }) => {
         codigo: cliente.codigo || '',
     });
     useEffect(() => {
-        // Pre-cargar los datos del cliente en el formulario
         setData({
-            nombre: cliente.nombre,
-            fecha_nacimiento: cliente.fecha_nacimiento,
-            celular: cliente.celular,
-            genero: cliente.genero,
-            huella: cliente.huella,
-            codigo: cliente.codigo,
+            nombre: cliente.nombre || '',
+            fecha_nacimiento: cliente.fecha_nacimiento || '',
+            celular: cliente.celular||'',
+            genero: cliente.genero || '',
+            huella: cliente.huella || '',
+            codigo: cliente.codigo || '',
         });
     }, [cliente]);
 

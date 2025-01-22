@@ -66,7 +66,7 @@ const Planes = ({ clientes, auth }) => {
                         <th className="text-left px-4 py-2">Código</th>
                         <th className="text-left px-4 py-2">Servicio</th>
                         <th className="text-left px-4 py-2">Fecha de vencimiento</th>
-                        <th className="text-left px-4 py-2 hidden sm:table-cell">Estado</th>
+                        <th className="text-left px-4 py-2 hidden sm:table-cell">Restantes</th>
                         {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
                     </tr>
                 </thead>

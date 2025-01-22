@@ -7,7 +7,7 @@ import Checkbox from '@/Components/Checkbox';
 const Create = () => {
     const { data, setData, post, processing, errors } = useForm({
         nombre: '',
-        icono: '',
+        //icono: '',
         ingreso:false,
         egreso:false
     });
@@ -40,7 +40,7 @@ const Create = () => {
                     {errors.nombre && <div className="text-red-600">{errors.nombre}</div>}
                 </div>
 
-                <div>
+                {/* <div>
                     <label htmlFor="icono" className="block">Ícono</label>
                     <TextInput
                         type="text"
@@ -50,7 +50,7 @@ const Create = () => {
                         className="border p-2 w-full"
                     />
                     {errors.icono && <div className="text-red-600">{errors.icono}</div>}
-                </div>
+                </div> */}
                 <div className='flex gap-4 flex-row mt-4 items-center '>
                     <label htmlFor="ingreso" className="block">Ingreso:</label>
                     <Checkbox

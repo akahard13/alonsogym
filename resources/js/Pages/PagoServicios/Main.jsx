@@ -9,13 +9,14 @@ const Main = ({ information, ultimoPago, pagos, auth }) => {
     const [selectedId, setSelectedId] = useState(null);
     const { delete: destroy } = useForm();
     const formatDate = (date) => {
-        const d = new Date(date);
-        const day = d.getDate().toString().padStart(2, '0'); // Añadir cero delante si el día es menor a 10
-        const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Los meses empiezan desde 0, así que sumamos 1
-        const year = d.getFullYear();
+        const d = new Date(date + 'T00:00:00Z');
+        const day = d.getUTCDate().toString().padStart(2, '0');
+        const month = (d.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = d.getUTCFullYear();
+
         return `${day}/${month}/${year}`;
     };
-    
+
     const handleDeleteClick = (id) => {
         setSelectedId(id);
         setShowModal(true);

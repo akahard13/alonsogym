@@ -7,7 +7,7 @@ import Checkbox from '@/Components/Checkbox';  // Asegúrate de que este compone
 const Edit = ({ categoria }) => {
     const { data, setData, put, processing, errors } = useForm({
         nombre: categoria.nombre || '',
-        icono: categoria.icono || '',
+        //icono: categoria.icono || '',
         ingreso: categoria.ingreso || false,
         egreso: categoria.egreso || false,
     });
@@ -16,7 +16,7 @@ const Edit = ({ categoria }) => {
         // Pre-cargar los datos de la categoría en el formulario
         setData({
             nombre: categoria.nombre,
-            icono: categoria.icono,
+            //icono: categoria.icono,
             ingreso: categoria.ingreso,
             egreso: categoria.egreso,
         });
@@ -50,7 +50,7 @@ const Edit = ({ categoria }) => {
                     {errors.nombre && <div className="text-red-600">{errors.nombre}</div>}
                 </div>
 
-                <div>
+                {/* <div>
                     <label htmlFor="icono" className="block">Ícono</label>
                     <TextInput
                         type="text"
@@ -60,7 +60,7 @@ const Edit = ({ categoria }) => {
                         className="border p-2 w-full"
                     />
                     {errors.icono && <div className="text-red-600">{errors.icono}</div>}
-                </div>
+                </div> */}
 
                 <div className="flex gap-4 flex-row mt-4 items-center">
                     <label htmlFor="ingreso" className="block">Ingreso:</label>
