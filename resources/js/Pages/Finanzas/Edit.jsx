@@ -2,7 +2,7 @@ import React from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const Edit = ({ dato, categorias, auth, update }) => {
+const Edit = ({ dato, categorias, auth, update, titulo, nombre }) => {
     const { data, setData, put, processing, errors } = useForm({
         descripcion: dato.descripcion,
         fecha: dato.fecha,
@@ -19,7 +19,7 @@ const Edit = ({ dato, categorias, auth, update }) => {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Editar Ingreso
+                    Editar {titulo}
                 </h2>
             }
         >

@@ -2,7 +2,7 @@ import React from 'react';
 import { Head, useForm, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const Create = ({ categorias, auth, store }) => {
+const Create = ({ categorias, auth, store, nombre, titulo }) => {
     const { data, setData, post, processing, errors } = useForm({
         descripcion: '',
         fecha: '',
@@ -19,7 +19,7 @@ const Create = ({ categorias, auth, store }) => {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Finanzas
+                    {titulo}
                 </h2>
             }
         >
@@ -93,7 +93,7 @@ const Create = ({ categorias, auth, store }) => {
                         disabled={processing}
                         className="px-6 py-2 bg-cyan-600 text-white font-semibold rounded-md hover:bg-cyan-700 focus:outline-none"
                     >
-                        Crear Ingreso
+                        Crear {nombre}
                     </button>
                 </div>
             </form>

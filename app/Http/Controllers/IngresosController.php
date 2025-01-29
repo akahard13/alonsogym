@@ -32,7 +32,7 @@ class IngresosController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             $categorias=Categorias::where('ingreso', true)->get();
-            return Inertia::render('Finanzas/Create', ['categorias' => $categorias, 'store' => 'ingresos.store']);
+            return Inertia::render('Finanzas/Create', ['categorias' => $categorias, 'store' => 'ingresos.store', 'titulo' => 'Ingresos', 'nombre' => 'ingreso']);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
@@ -56,7 +56,8 @@ class IngresosController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             Categorias::all();
-            return Inertia::render('Finanzas/Edit', ['dato' => $ingresos, 'categorias' => Categorias::all(), 'update' => 'ingresos.update']);
+            return Inertia::render('Finanzas/Edit', ['dato' => $ingresos, 'categorias' => Categorias::all(), 'update' => 'ingresos.update',
+            'titulo' => 'Ingresos', 'nombre' => 'ingreso']);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
