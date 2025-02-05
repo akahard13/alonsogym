@@ -17,18 +17,18 @@ export default function Dashboard({ info, finanzas }) {
                 <div className="grid grid-cols-3 gap-4">
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <h3 className="text-lg font-bold text-gray-700">Clientes Generales</h3>
-                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center"><IoManSharp /> {info.clientes_generales.masculino}</p>
-                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman /> {info.clientes_generales.femenino}</p>
+                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-8 h-8'/> {info.clientes_generales.masculino}</p>
+                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-8 h-8'/> {info.clientes_generales.femenino}</p>
                     </div>
 
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <h3 className="text-lg font-bold text-gray-700">Clientes Activos</h3>
-                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center"><IoManSharp /> {info.clientes_activos.masculino}</p>
-                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman /> {info.clientes_activos.femenino}</p>
+                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-8 h-8'/> {info.clientes_activos.masculino}</p>
+                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-8 h-8'/> {info.clientes_activos.femenino}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <h3 className="text-lg font-bold text-gray-700">Finanzas del mes</h3>
-                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center">Ingresos: C$ {finanzas.ingresos}</p>
+                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4">Ingresos: C$ {finanzas.ingresos}</p>
                         <p className="text-pink-500 font-semibold flex flex-row items-center align-center">Egresos: C$ {finanzas.egresos}</p>
                     </div>
                 </div>
@@ -40,8 +40,8 @@ export default function Dashboard({ info, finanzas }) {
                         {info.clientes_activos_planes.map((plan, index) => (
                             <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-sm">
                                 <h4 className="font-semibold text-gray-800">{plan.nombre_servicio}</h4>
-                                <p className="text-blue-500 font-semibold flex flex-row items-center align-center"><IoManSharp /> {plan.total_masculino}</p>
-                                <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman /> {plan.total_femenino}</p>
+                                <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-8 h-8'/> {plan.total_masculino}</p>
+                                <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-8 h-8'/> {plan.total_femenino}</p>
                             </div>
                         ))}
                     </div>
