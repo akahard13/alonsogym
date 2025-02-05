@@ -27,6 +27,7 @@ class PagoServiciosController extends Controller
 
     public function __construct()
     {
+        date_default_timezone_set('America/Managua');
         $this->admin = env('ADMIN_ROL', 1);
     }
 
@@ -77,7 +78,7 @@ class PagoServiciosController extends Controller
                 ->where('pps.cliente', $id)
                 ->orderByDesc('pps.fecha_pago')
                 ->first();
-                $fecha=new DateTime();
+            $fecha = new DateTime();
             return $ultimopago ? $ultimopago : ["precio" => '0.00', "fecha_pago" =>  $fecha->format('Y-m-d H:i:s'), 'id_servicio' => 1];
         } catch (\Exception $e) {
             return null;
@@ -87,11 +88,13 @@ class PagoServiciosController extends Controller
     public function create(Cliente $cliente): RedirectResponse|Response
     {
         $user_rol = Auth::user()->rol;
+        $fecha = new DateTime();
         if ($user_rol == $this->admin) {
             $servicios = Servicio::where('activo', true)->get();
             $ultimoPago = $this->ultimo_pago($cliente->id);
             $tipo_pagos = TipoPagoServicio::all();
-            return Inertia::render('PagoServicios/Create', ['cliente' => $cliente, 'servicios' => $servicios, 'tipo_pagos' => $tipo_pagos, 'ultimoPago' => $ultimoPago]);
+            return Inertia::render('PagoServicios/Create', [
+                'fecha' => $fecha->format('Y-m-d'), 'cliente' => $cliente, 'servicios' => $servicios, 'tipo_pagos' => $tipo_pagos, 'ultimoPago' => $ultimoPago]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');
     }
@@ -111,14 +114,16 @@ class PagoServiciosController extends Controller
                 'fecha_pago' => 'required|date',
                 'precio' => 'required|numeric|min:0',
                 'fecha_vencimiento' => 'required|date',
+                'fecha_ingreso' => 'required|date',
             ]);
 
             DB::beginTransaction();
 
             try {
                 $fecha_pago = new DateTime($request->fecha_pago);
+                $fecha_ingreso = new DateTime($request->fecha_ingreso);
                 $fecha_vencimiento = new DateTime($request->fecha_vencimiento);
-                PagoServicio::create([
+                $pago = PagoServicio::create([
                     'cliente' => $request->cliente,
                     'servicio' => $request->servicio,
                     'tipo_pago' => $request->tipo_pago,
@@ -131,9 +136,10 @@ class PagoServiciosController extends Controller
                 $tipo_pago = TipoPagoServicio::find($request->tipo_pago);
                 Ingresos::create([
                     'categoria' => 1,
-                    'fecha' => $fecha_pago->format('Y-m-d'),
+                    'fecha' => $fecha_ingreso->format('Y-m-d'),
                     'total' => $request->precio,
-                    'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto del servicio $servicio->nombre $tipo_pago->nombre"
+                    'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto del servicio $servicio->nombre $tipo_pago->nombre",
+                    'id_pago_servicio' => $pago->id
                 ]);
                 DB::commit();
                 return redirect()->route('pago_servicios.index', ['cliente' => $request->cliente])

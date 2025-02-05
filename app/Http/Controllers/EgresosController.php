@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorias;
 use App\Models\Egresos;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -12,7 +13,8 @@ class EgresosController extends Controller
 {
     protected $admin;
     public function __construct()
-    {
+    {        
+        date_default_timezone_set('America/Managua');
         $this->admin = env('ADMIN_ROL',1);
     }
     public function index()
@@ -28,10 +30,11 @@ class EgresosController extends Controller
     }
     public function create()
     {
+        $fecha = new DateTime();
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             $categorias = Categorias::where('egreso', true)->get();
-            return Inertia::render('Finanzas/Create', ['categorias' => $categorias, 'store' => 'egresos.store', 'titulo' => 'Egresos', 'nombre' => 'egreso']);
+            return Inertia::render('Finanzas/Create', ['fecha' => $fecha->format('Y-m-d') ,'categorias' => $categorias, 'store' => 'egresos.store', 'titulo' => 'Egresos', 'nombre' => 'egreso']);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }

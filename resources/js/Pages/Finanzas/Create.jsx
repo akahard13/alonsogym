@@ -2,10 +2,10 @@ import React from 'react';
 import { Head, useForm, Link } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const Create = ({ categorias, auth, store, nombre, titulo }) => {
+const Create = ({ categorias, auth, store, nombre, titulo, fecha }) => {
     const { data, setData, post, processing, errors } = useForm({
         descripcion: '',
-        fecha: '',
+        fecha: fecha,
         categoria: '',
         total: '',
     });

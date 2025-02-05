@@ -7,10 +7,10 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { AdminRol } from '@/Info/Roles';
 import ConfirmModal from '@/Components/ConfirmModal';
 
-const Main = ({ datos, auth, editar, eliminar, create, titulo }) => {
+const Main = ({ datos, auth, editar, eliminar, create, titulo, fecha }) => {
     const rol = auth.user.rol;
     const [searchTerm, setSearchTerm] = useState('');
-    const [startDate, setStartDate] = useState('');
+    const [startDate, setStartDate] = useState(fecha);
     const [endDate, setEndDate] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [selectedId, setSelectedId] = useState(null);

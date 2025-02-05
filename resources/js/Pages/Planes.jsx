@@ -27,114 +27,117 @@ const Planes = ({ clientes, auth }) => {
         cliente && cliente.id && cliente.id.toString().includes(searchTerm)
     );
 
-const { flash } = usePage().props;
-const rol = auth.user.rol;
-return (
-    <AuthenticatedLayout
-        header={
-            <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                Clientes
-            </h2>
-        }
-    >
-        <Head title="Clientes Totales" />
-        {rol === AdminRol && (
-            <Link
-                href={route('clientes.create')}
-                className="bg-cyan-900 text-white px-4 py-2 rounded hover:bg-cyan-600"
-            >
-                Nuevo Cliente
-            </Link>
-        )}
-        {flash.success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">{flash.success}</div>}
-        {flash.permission && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mt-4">{flash.permission}</div>}
-        {/* Campo de búsqueda */}
-        <div className="my-4">
-            <input
-                type="text"
-                placeholder="Buscar por nombre o código"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
-            />
-        </div>
-        <table className="w-full mt-4">
-            <thead>
-                <tr className="bg-gray-200">
-                    <th className="text-left px-4 py-2 hidden sm:table-cell">ID</th>
-                    <th className="text-left px-4 py-2">Nombre</th>
-                    <th className="text-left px-4 py-2 hidden sm:table-cell">Género</th>
-                    <th className="text-left px-4 py-2">Código</th>
-                    <th className="text-left px-4 py-2">Servicio</th>
-                    <th className="text-left px-4 py-2">Fecha de vencimiento</th>
-                    <th className="text-left px-4 py-2 hidden sm:table-cell">Restantes</th>
-                    {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
-                </tr>
-            </thead>
-            <tbody>
-                {filteredClientes.length > 0 ? (
-                    filteredClientes.map((cliente) => (
-                        <tr key={cliente.id} className="items-center">
-                            <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.id}</td>
-                            <td className="text-left px-4 py-2">{cliente.nombre}</td>
-                            <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.genero}</td>
-                            <td className="text-left px-4 py-2">{cliente.codigo}</td>
-                            <td className="text-left px-4 py-2">{cliente.servicio}</td>
-                            <td className="text-left px-4 py-2">
-                                {new Intl.DateTimeFormat('es-ES', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric',
-                                }).format(new Date(cliente.fecha_vencimiento))}
-                            </td>
-                            <td className="text-left px-4 py-2">
-                                <span
-                                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${cliente.estado ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"}`}
-                                >
-                                    {cliente.dias_restantes_numerico < 0 ? 'Vencido' : cliente.dias_restantes}
-                                </span>
-
-                            </td>
-                            {rol === AdminRol && (
-                                <td className="flex justify-around space-x-4">
-                                    <Link href={route('pago_servicios.index', cliente.id)}
-                                        className="text-cyan-900 hover:text-green-700"
-                                    >
-                                        <RiMoneyDollarCircleLine className='w-8 h-8' title='Pagar' />
-                                    </Link>
-                                    <Link
-                                        href={route('clientes.edit', cliente.id)}
-                                        className="text-cyan-900 mr-2 hover:text-blue-700"
-                                    >
-                                        <HiOutlinePencilSquare className='w-8 h-8' title='Editar' />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDeleteClick(cliente.id)}
-                                        className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
-                                    >
-                                        <CgTrash className='w-8 h-8' title='Eliminar' />
-                                    </button>
-                                </td>
-                            )}
-                        </tr>
-                    ))
-                ) : (
-                    <tr>
-                        <td colSpan="6" className="text-center text-gray-500 py-4">
-                            No se encontraron resultados.
-                        </td>
+    const { flash } = usePage().props;
+    const rol = auth.user.rol;
+    return (
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                    Clientes
+                </h2>
+            }
+        >
+            <Head title="Clientes Totales" />
+            {rol === AdminRol && (
+                <Link
+                    href={route('clientes.create')}
+                    className="bg-cyan-900 text-white px-4 py-2 rounded hover:bg-cyan-600"
+                >
+                    Nuevo Cliente
+                </Link>
+            )}
+            {flash.success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">{flash.success}</div>}
+            {flash.permission && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mt-4">{flash.permission}</div>}
+            {/* Campo de búsqueda */}
+            <div className="my-4">
+                <input
+                    type="text"
+                    placeholder="Buscar por nombre o código"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                />
+            </div>
+            <table className="w-full mt-4">
+                <thead>
+                    <tr className="bg-gray-200">
+                        <th className="text-left px-4 py-2 hidden sm:table-cell">ID</th>
+                        <th className="text-left px-4 py-2">Nombre</th>
+                        <th className="text-left px-4 py-2 hidden sm:table-cell">Género</th>
+                        <th className="text-left px-4 py-2">Código</th>
+                        <th className="text-left px-4 py-2">Servicio</th>
+                        <th className="text-left px-4 py-2">Fecha de vencimiento</th>
+                        <th className="text-left px-4 py-2 hidden sm:table-cell">Restantes</th>
+                        {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
                     </tr>
-                )}
-            </tbody>
-        </table>
-        <ConfirmModal
-            show={showModal}
-            title="¿Estás seguro de que quieres eliminar este cliente?"
-            onClose={() => setShowModal(false)}
-            onConfirm={handleConfirm}
-        />
-    </AuthenticatedLayout>
-);
+                </thead>
+                <tbody>
+                    {filteredClientes.length > 0 ? (
+                        filteredClientes.map((cliente) => (
+                            <tr key={cliente.id} className="items-center">
+                                <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.id}</td>
+                                <td className="text-left px-4 py-2">{cliente.nombre}</td>
+                                <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.genero}</td>
+                                <td className="text-left px-4 py-2">{cliente.codigo}</td>
+                                <td className="text-left px-4 py-2">{cliente.servicio}</td>
+                                <td className="text-left px-4 py-2">
+                                    {new Intl.DateTimeFormat('es-ES', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        timeZone: 'UTC'  // 👈 Fuerza el formato UTC
+                                    }).format(new Date(cliente.fecha_vencimiento + 'Z'))}
+
+
+                                </td>
+                                <td className="text-left px-4 py-2">
+                                    <span
+                                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${cliente.estado ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"}`}
+                                    >
+                                        {cliente.dias_restantes_numerico < 0 ? 'Vencido' : cliente.dias_restantes}
+                                    </span>
+
+                                </td>
+                                {rol === AdminRol && (
+                                    <td className="flex justify-around space-x-4">
+                                        <Link href={route('pago_servicios.index', cliente.id)}
+                                            className="text-cyan-900 hover:text-green-700"
+                                        >
+                                            <RiMoneyDollarCircleLine className='w-8 h-8' title='Pagar' />
+                                        </Link>
+                                        <Link
+                                            href={route('clientes.edit', cliente.id)}
+                                            className="text-cyan-900 mr-2 hover:text-blue-700"
+                                        >
+                                            <HiOutlinePencilSquare className='w-8 h-8' title='Editar' />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDeleteClick(cliente.id)}
+                                            className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
+                                        >
+                                            <CgTrash className='w-8 h-8' title='Eliminar' />
+                                        </button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="6" className="text-center text-gray-500 py-4">
+                                No se encontraron resultados.
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+            <ConfirmModal
+                show={showModal}
+                title="¿Estás seguro de que quieres eliminar este cliente?"
+                onClose={() => setShowModal(false)}
+                onConfirm={handleConfirm}
+            />
+        </AuthenticatedLayout>
+    );
 };
 
 export default Planes;

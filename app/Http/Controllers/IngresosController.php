@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Categorias;
 use App\Models\Ingresos;
 use App\Models\odel;
+use App\Models\PagoServicio;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -14,7 +16,8 @@ class IngresosController extends Controller
     protected $admin;
     public function __construct()
     {
-        $this->admin = env('ADMIN_ROL',1);
+        date_default_timezone_set('America/Managua');
+        $this->admin = env('ADMIN_ROL', 1);
     }
     public function index()
     {
@@ -24,15 +27,17 @@ class IngresosController extends Controller
             'editar' => 'ingresos.edit',
             'eliminar' => 'ingresos.destroy',
             'create' => 'ingresos.create',
-            'titulo' => 'Ingresos'
+            'titulo' => 'Ingresos',
+            'fecha' => date('Y-m-d')
         ]);
     }
     public function create()
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            $categorias=Categorias::where('ingreso', true)->get();
-            return Inertia::render('Finanzas/Create', ['categorias' => $categorias, 'store' => 'ingresos.store', 'titulo' => 'Ingresos', 'nombre' => 'ingreso']);
+            $fecha = new DateTime();
+            $categorias = Categorias::where('ingreso', true)->get();
+            return Inertia::render('Finanzas/Create', ['fecha' => $fecha->format('Y-m-d'), 'categorias' => $categorias, 'store' => 'ingresos.store', 'titulo' => 'Ingresos', 'nombre' => 'ingreso']);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
@@ -56,8 +61,13 @@ class IngresosController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             Categorias::all();
-            return Inertia::render('Finanzas/Edit', ['dato' => $ingresos, 'categorias' => Categorias::all(), 'update' => 'ingresos.update',
-            'titulo' => 'Ingresos', 'nombre' => 'ingreso']);
+            return Inertia::render('Finanzas/Edit', [
+                'dato' => $ingresos,
+                'categorias' => Categorias::all(),
+                'update' => 'ingresos.update',
+                'titulo' => 'Ingresos',
+                'nombre' => 'ingreso'
+            ]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
@@ -82,7 +92,12 @@ class IngresosController extends Controller
      */
     public function destroy(Ingresos $ingresos)
     {
+        $id_pago = $ingresos->id_pago_servicio??null;
+        $pago_servicio = PagoServicio::find($id_pago);
         $ingresos->delete();
+        if ($pago_servicio) {
+            $pago_servicio->delete();
+        }
         return redirect()->route('ingresos.index')->with('success', 'Ingreso eliminado correctamente.');
     }
 }

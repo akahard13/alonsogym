@@ -67,7 +67,6 @@ const Main = ({ clientes, auth }) => {
                     <tr className="bg-gray-200">
                         <th className="text-left px-4 py-2 hidden sm:table-cell">ID</th>
                         <th className="text-left px-4 py-2">Nombre</th>
-                        <th className="text-left px-4 py-2 hidden sm:table-cell">Celular</th>
                         <th className="text-left px-4 py-2 hidden sm:table-cell">Género</th>
                         <th className="text-left px-4 py-2">Código</th>
                         {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
@@ -79,7 +78,6 @@ const Main = ({ clientes, auth }) => {
                             <tr key={cliente.id} className="items-center">
                                 <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.id}</td>
                                 <td className="text-left px-4 py-2">{cliente.nombre}</td>
-                                <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.celular}</td>
                                 <td className="text-left px-4 py-2 hidden sm:table-cell">{cliente.genero.nombre}</td>
                                 <td className="text-left px-4 py-2">{cliente.codigo}</td>
                                 {rol === AdminRol && (

@@ -9,7 +9,7 @@ class Ingresos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['descripcion', 'fecha', 'categoria', 'total'];
+    protected $fillable = ['descripcion', 'fecha', 'categoria', 'total', 'id_pago_servicio'];
 
     public function categoria()
     {

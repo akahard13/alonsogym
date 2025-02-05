@@ -3,8 +3,7 @@ import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 
-const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
-    // Calcular la fecha de vencimiento inicial
+const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
     let fechaVencimientoInicial = ultimoPago ? new Date(ultimoPago.fecha_vencimiento) : null;
 
     if (fechaVencimientoInicial && !isNaN(fechaVencimientoInicial)) {
@@ -12,8 +11,6 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
     } else {
         fechaVencimientoInicial = new Date();
     }
-
-    // Inicializar el formulario con useForm de Inertia.js
     const { data, setData, post, processing, errors } = useForm({
         cliente: cliente.id,
         fecha_pago: fechaVencimientoInicial.toISOString().split('T')[0],
@@ -22,11 +19,10 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
         precio: ultimoPago.precio,
         descuento: '0.00',
         fecha_vencimiento: '',
+        fecha_ingreso: fecha
     });
 
     const [precio, setPrecio] = useState(ultimoPago.precio);
-
-    // Función para calcular la fecha de vencimiento
     const calcularFechaVencimiento = (fechaPago, tipoPago) => {
         const fecha = new Date(fechaPago);
         let fechaVencimiento = new Date(fecha);
@@ -59,13 +55,10 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
         return fechaVencimiento.toISOString().split('T')[0];
     };
 
-    // Función para obtener los días del mes
     const obtenerDiasDelMes = (fecha) => {
         const date = new Date(fecha);
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     };
-
-    // Efecto para calcular la fecha de vencimiento cuando cambia la fecha de pago o el tipo de pago
     useEffect(() => {
         if (data.fecha_pago && data.tipo_pago) {
             const nuevaFechaVencimiento = calcularFechaVencimiento(data.fecha_pago, data.tipo_pago);
@@ -219,7 +212,7 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                         {errors.descripcion && <div className="text-red-600 mt-1">{errors.descripcion}</div>}
                     </div>
                     <div>
-                        <label htmlFor="fecha_pago" className="block font-semibold mb-2">Fecha de Pago</label>
+                        <label htmlFor="fecha_pago" className="block font-semibold mb-2">Fecha de inicio del plan</label>
                         <TextInput
                             type="date"
                             name="fecha_pago"
@@ -239,6 +232,17 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos }) => {
                             className="border rounded p-3 w-full"
                         />
                         {errors.fecha_vencimiento && <div className="text-red-600 mt-1">{errors.fecha_vencimiento}</div>}
+                    </div>
+                    <div>
+                        <label htmlFor="fecha_ingreso" className="block font-semibold mb-2">Fecha de Pago</label>
+                        <TextInput
+                            type="date"
+                            name="fecha_ingreso"
+                            value={data.fecha_ingreso}
+                            onChange={(e) => setData('fecha_ingreso', e.target.value)}
+                            className="border rounded p-3 w-full"
+                        />
+                        {errors.fecha_pago && <div className="text-red-600 mt-1">{errors.fecha_pago}</div>}
                     </div>
                 </div>
 

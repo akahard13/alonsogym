@@ -19,6 +19,7 @@ class ClienteController extends Controller
     protected $admin;
     public function __construct()
     {
+        date_default_timezone_set('America/Managua');
         $this->admin = env('ADMIN_ROL', 1);
     }
     public function create()
@@ -83,7 +84,7 @@ class ClienteController extends Controller
             ]);
             $servicio = Servicio::find($request->servicio);
             $tipo_pago = TipoPagoServicio::find($request->tipo_pago);
-            PagoServicio::create([
+            $pago=PagoServicio::create([
                 'cliente' => $cliente->id,
                 'servicio' => $request->servicio,
                 'tipo_pago' => $request->tipo_pago,
@@ -96,7 +97,8 @@ class ClienteController extends Controller
                 'categoria' => 1,
                 'fecha' => $fecha_ingreso->format('Y-m-d'),
                 'total' => $request->precio,
-                'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto del servicio $servicio->nombre $tipo_pago->nombre"
+                'descripcion' => "Pago de servicio correspondiente a $cliente->nombre por concepto del servicio $servicio->nombre $tipo_pago->nombre",
+                'id_pago_servicio' => $pago->id
             ]);
 
             return redirect()->route('clientes.index')->with('success', 'Cliente creado correctamente.');
@@ -105,7 +107,7 @@ class ClienteController extends Controller
     }
     public function index()
     {
-        $clientes = Cliente::with('genero')->get();
+        $clientes = Cliente::with('genero')->orderBy('id', 'desc')->get();
         return Inertia::render('Clientes/Main', ['clientes' => $clientes]);
     }
     public function activos()
