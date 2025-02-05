@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EgresosController;
 use App\Http\Controllers\IngresosController;
 use App\Http\Controllers\PagoPersonalController;
@@ -18,11 +19,8 @@ Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Rutas para roles
     //Route::get('/roles', [RoleController::class, 'index'])->name('roles.index'); // Listar roles
     // Route::get('/roles/create', [RoleController::class, 'create'])->name('roles.create'); // Formulario de creación

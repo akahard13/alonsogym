@@ -168,17 +168,13 @@ class PagoServiciosController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             $request->validate([
-                'personal' => 'required|exists:personals,id', // Validar que el personal exista
+                'personal' => 'required|exists:personals,id',
                 'fecha_pago' => 'required|date',
                 'monto' => 'required|numeric|min:0',
                 'descripcion' => 'nullable|string|max:255',
             ]);
-
-            // Formatear las fechas para que se guarden en formato 'Y-m-d'
             $fecha_pago = new DateTime($request->fecha_pago);
             $fecha_pago_formatted = $fecha_pago->format('Y-m-d');
-
-            // Actualizar el registro de pago personal
             $pagoPersonal->update([
                 'fecha_pago' => $fecha_pago_formatted,
                 'monto' => $request->monto,
