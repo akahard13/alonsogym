@@ -51,7 +51,7 @@ class PagoPersonalController extends Controller
                 'descripcion' => 'nullable|string|max:255',
             ]);
             $fecha_pago = new DateTime($request->fecha_pago);
-            PagoPersonal::create(
+            $pago=PagoPersonal::create(
                 [
                     'personal' => $request->personal,
                     'fecha_pago' => $fecha_pago->format('Y-m-d'),
@@ -64,7 +64,8 @@ class PagoPersonalController extends Controller
                 'categoria' => 2, // Categoría de egreso para pagos de salario
                 'fecha' => $request->fecha_pago,
                 'total' => $request->monto,
-                'descripcion' => $request->descripcion
+                'descripcion' => $request->descripcion,
+                'id_pago_personal' => $pago->id
             ]);
             return redirect()->route('pago_personal.index', ['personal' => $request->personal])->with('success', 'Pago registrado correctamente.');
         }

@@ -9,7 +9,7 @@ class Egresos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['descripcion', 'fecha', 'categoria', 'total'];
+    protected $fillable = ['descripcion', 'fecha', 'categoria', 'total', 'id_pago_personal'];
 
     public function categoria()
     {

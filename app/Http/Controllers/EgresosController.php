@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorias;
 use App\Models\Egresos;
+use App\Models\PagoPersonal;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,9 +14,9 @@ class EgresosController extends Controller
 {
     protected $admin;
     public function __construct()
-    {        
+    {
         date_default_timezone_set('America/Managua');
-        $this->admin = env('ADMIN_ROL',1);
+        $this->admin = env('ADMIN_ROL', 1);
     }
     public function index()
     {
@@ -34,7 +35,7 @@ class EgresosController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             $categorias = Categorias::where('egreso', true)->get();
-            return Inertia::render('Finanzas/Create', ['fecha' => $fecha->format('Y-m-d') ,'categorias' => $categorias, 'store' => 'egresos.store', 'titulo' => 'Egresos', 'nombre' => 'egreso']);
+            return Inertia::render('Finanzas/Create', ['fecha' => $fecha->format('Y-m-d'), 'categorias' => $categorias, 'store' => 'egresos.store', 'titulo' => 'Egresos', 'nombre' => 'egreso']);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
@@ -58,8 +59,13 @@ class EgresosController extends Controller
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
             Categorias::all();
-            return Inertia::render('Finanzas/Edit', ['dato' => $egresos, 'categorias' => Categorias::all(), 'update' => 'egresos.update',
-            'titulo' => 'Egresos', 'nombre' => 'egreso']);
+            return Inertia::render('Finanzas/Edit', [
+                'dato' => $egresos,
+                'categorias' => Categorias::all(),
+                'update' => 'egresos.update',
+                'titulo' => 'Egresos',
+                'nombre' => 'egreso'
+            ]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
@@ -82,9 +88,14 @@ class EgresosController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Egresos $ingresos)
+    public function destroy(Egresos $egresos)
     {
-        $ingresos->delete();
+        $id_pago = $egresos->id_pago_personal ?? null;
+        $pago_personal = PagoPersonal::find($id_pago);
+        if ($pago_personal) {
+            $pago_personal->delete();
+        }
+        $egresos->delete();
         return redirect()->route('ingresos.index')->with('success', 'Ingreso eliminado correctamente.');
     }
 }
