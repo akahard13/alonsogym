@@ -14,22 +14,30 @@ export default function Dashboard({ info, finanzas }) {
             <Head title="Dashboard" />
             <div className="p-6 space-y-6">
                 {/* Clientes Generales */}
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                     <div className="bg-white p-4 rounded-lg shadow-md">
-                        <h3 className="text-lg font-bold text-gray-700">Clientes Generales</h3>
-                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-8 h-8'/> {info.clientes_generales.masculino}</p>
-                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-8 h-8'/> {info.clientes_generales.femenino}</p>
-                    </div>
-
-                    <div className="bg-white p-4 rounded-lg shadow-md">
-                        <h3 className="text-lg font-bold text-gray-700">Clientes Activos</h3>
-                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-8 h-8'/> {info.clientes_activos.masculino}</p>
-                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-8 h-8'/> {info.clientes_activos.femenino}</p>
+                        <h3 className="font-bold text-gray-700 text-center text-3xl">Clientes Generales</h3>
+                        <div className="flex flex-row justify-around mt-4 mb-4 text-center text-2xl">
+                            <p className="text-blue-500 font-semibold flex flex-row items-center align-center"><IoManSharp className='w-12 h-12' /> {info.clientes_generales.masculino}</p>
+                            <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-16 h-16' /> {info.clientes_generales.femenino}</p>
+                        </div>
+                        <p className="font-semibold flex flex-row items-center align-center ml-2 text-2xl bg-blue-300 rounded-3xl p-2 justify-center">Total: {info.clientes_generales.total}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow-md">
-                        <h3 className="text-lg font-bold text-gray-700">Finanzas del mes</h3>
-                        <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4">Ingresos: C$ {finanzas.ingresos}</p>
-                        <p className="text-pink-500 font-semibold flex flex-row items-center align-center">Egresos: C$ {finanzas.egresos}</p>
+                        <h3 className="font-bold text-gray-700 text-center text-3xl">Clientes Activos</h3>
+                        <div className="flex flex-row justify-around mt-4 mb-4 text-2xl">
+                            <p className="text-blue-500 font-semibold flex flex-row items-center align-center text-2xl"><IoManSharp className='w-12 h-12' /> {info.clientes_activos.masculino}</p>
+                            <p className="text-pink-500 font-semibold flex flex-row items-center align-center text-2xl"><IoMdWoman className='w-16 h-16' /> {info.clientes_activos.femenino}</p>
+                        </div>
+                        <p className="font-semibold flex flex-row items-center align-center ml-2 text-2xl bg-blue-300 rounded-3xl p-2 justify-center">Total: {info.clientes_activos.total}</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow-md">
+                        <h3 className="font-bold text-gray-700 text-center text-3xl">Finanzas del mes</h3>
+                        <div className="flex flex-row justify-around mt-4 mb-4 text-xl">
+                            <p className="text-green-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><span className='text-black mr-2'>Ingresos:</span> C$ {finanzas.ingresos}</p>
+                            <p className="text-pink-500 font-semibold flex flex-row items-center align-center  mt-4 mb-4"><span className='text-black mr-2'>Egresos:</span>C$ {finanzas.egresos}</p>
+                        </div>
+                        <p className="font-semibold flex flex-row items-center align-center ml-2 text-2xl bg-blue-300 rounded-3xl p-2 justify-center mt-8"><span className='text-black mr-2'>Ganancias:</span>C$ {finanzas.ganancia}</p>
                     </div>
                 </div>
 
@@ -39,9 +47,13 @@ export default function Dashboard({ info, finanzas }) {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {info.clientes_activos_planes.map((plan, index) => (
                             <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-sm">
-                                <h4 className="font-semibold text-gray-800">{plan.nombre_servicio}</h4>
-                                <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-8 h-8'/> {plan.total_masculino}</p>
-                                <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-8 h-8'/> {plan.total_femenino}</p>
+                                <h4 className="font-semibold text-gray-800 text-center text-3xl">{plan.nombre_servicio}</h4>
+                                <div className="flex flex-row justify-around mt-4 mb-4 text-2xl">
+                                    <p className="text-blue-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><IoManSharp className='w-12 h-12' /> {plan.total_masculino}</p>
+                                    <p className="text-pink-500 font-semibold flex flex-row items-center align-center"><IoMdWoman className='w-16 h-16' /> {plan.total_femenino}</p>
+                                </div>
+                                <p className="font-semibold flex flex-row items-center align-center ml-2 text-2xl bg-blue-300 rounded-3xl p-2 justify-center"> Total: {plan.total}</p>
+
                             </div>
                         ))}
                     </div>

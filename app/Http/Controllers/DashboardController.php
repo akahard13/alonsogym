@@ -42,6 +42,7 @@ class DashboardController extends Controller
             'clientes_generales' => [
                 'masculino' => $masculinoCount,
                 'femenino' => $femeninoCount,
+                'total' => $masculinoCount + $femeninoCount
             ],
             'clientes_activos' => $clientesActivos,
             'clientes_activos_planes' => $this->obtenerClientesActivosPorGenero(true)
@@ -93,6 +94,7 @@ class DashboardController extends Controller
                     'nombre_servicio' => $nombreServicio,
                     'total_masculino' => $varonesCount,
                     'total_femenino' => $mujeresCount,
+                    'total' => $varonesCount + $mujeresCount
                 ];
             }
 
@@ -105,6 +107,7 @@ class DashboardController extends Controller
         return [
             'masculino' => $varonesCount,
             'femenino' => $mujeresCount,
+            'total' => $varonesCount + $mujeresCount
         ];
     }
     private function getFinanzas()
@@ -119,7 +122,8 @@ class DashboardController extends Controller
             ->sum('total');
         return [
             'ingresos' => $totalIngresos,
-            'egresos' => $totalEgresos
+            'egresos' => $totalEgresos,
+            'ganancia' => (string)((float)$totalIngresos - (float)$totalEgresos)
         ];
     }
 }
