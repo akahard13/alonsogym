@@ -120,10 +120,11 @@ class DashboardController extends Controller
         $totalEgresos = Egresos::whereMonth('fecha', $mesActual)
             ->whereYear('fecha', $anioActual)
             ->sum('total');
+            $ganacias=(float)$totalIngresos - (float)$totalEgresos;
         return [
-            'ingresos' => $totalIngresos,
-            'egresos' => $totalEgresos,
-            'ganancia' => (string)((float)$totalIngresos - (float)$totalEgresos)
+            'ingresos' => number_format($totalIngresos, 2),
+            'egresos' => number_format($totalEgresos, 2),
+            'ganancia' => number_format($ganacias, 2),
         ];
     }
 }

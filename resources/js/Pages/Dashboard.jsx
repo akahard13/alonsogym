@@ -35,7 +35,7 @@ export default function Dashboard({ info, finanzas }) {
                         <h3 className="font-bold text-gray-700 text-center text-3xl">Finanzas del mes</h3>
                         <div className="flex flex-row justify-around mt-4 mb-4 text-xl">
                             <p className="text-green-500 font-semibold flex flex-row items-center align-center mb-4 mt-4"><span className='text-black mr-2'>Ingresos:</span> C$ {finanzas.ingresos}</p>
-                            <p className="text-pink-500 font-semibold flex flex-row items-center align-center  mt-4 mb-4"><span className='text-black mr-2'>Egresos:</span>C$ {finanzas.egresos}</p>
+                            <p className="text-red-500 font-semibold flex flex-row items-center align-center  mt-4 mb-4"><span className='text-black mr-2'>Egresos:</span>C$ {finanzas.egresos}</p>
                         </div>
                         <p className="font-semibold flex flex-row items-center align-center ml-2 text-2xl bg-blue-300 rounded-3xl p-2 justify-center mt-8"><span className='text-black mr-2'>Ganancias:</span>C$ {finanzas.ganancia}</p>
                     </div>
