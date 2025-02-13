@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
-const Create = ({ generos, servicios, tipo_pagos }) => {
+const Create = ({ generos, servicios, tipo_pagos, fecha }) => {
     const { data, setData, post, processing, errors } = useForm({
         nombre: '',
         fecha_nacimiento: '',
@@ -14,8 +14,9 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
         precio: '0.00',
         tipo_pago: '',
         descuentos: '',
-        fecha_pago: '',
+        fecha_pago: fecha,
         fecha_vencimiento: '',
+        fecha_ingreso: fecha,
     });
     const calcularFechaVencimiento = (fechaPago, tipoPago) => {
         const fecha = new Date(fechaPago);
@@ -212,7 +213,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         {errors.servicio && <div className="text-red-600 mt-1">{errors.servicio}</div>}
                     </div>
 
-                    <div>
+                    <div className="mt-4">
                         <label htmlFor="tipo_pago" className="block font-semibold mb-2">Modalidad:</label>
                         <select
                             name="tipo_pago"
@@ -230,7 +231,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         {errors.tipo_pago && <div className="text-red-600 mt-1">{errors.tipo_pago}</div>}
                     </div>
 
-                    <div>
+                    <div className="mt-4">
                         <label htmlFor="precio" className="block font-semibold mb-2">Precio</label>
                         <TextInput
                             type="number"
@@ -243,7 +244,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         {errors.monto && <div className="text-red-600 mt-1">{errors.monto}</div>}
                     </div>
 
-                    <div>
+                    <div className="mt-4">
                         <label htmlFor="descuento" className="block font-semibold mb-2">Descuento</label>
                         <TextInput
                             type="number"
@@ -256,7 +257,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         {errors.descripcion && <div className="text-red-600 mt-1">{errors.descripcion}</div>}
                     </div>
 
-                    <div>
+                    <div className="mt-4">
                         <label htmlFor="fecha_pago" className="block font-semibold mb-2">Fecha de Pago</label>
                         <TextInput
                             type="date"
@@ -268,7 +269,7 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         {errors.fecha_pago && <div className="text-red-600 mt-1">{errors.fecha_pago}</div>}
                     </div>
 
-                    <div>
+                    <div className="mt-4">
                         <label htmlFor="fecha_vencimiento" className="block font-semibold mb-2">Fecha de Vencimiento</label>
                         <TextInput
                             type="date"
@@ -279,7 +280,17 @@ const Create = ({ generos, servicios, tipo_pagos }) => {
                         />
                         {errors.fecha_vencimiento && <div className="text-red-600 mt-1">{errors.fecha_vencimiento}</div>}
                     </div>
-
+                    <div className="mt-4">
+                        <label htmlFor="fecha_ingreso" className="block font-semibold mb-2">Fecha de Ingreso</label>
+                        <TextInput
+                            type="date"
+                            name="fecha_ingreso"
+                            value={data.fecha_ingreso}
+                            onChange={(e) => setData('fecha_ingreso', e.target.value)}
+                            className="border rounded p-3 w-full"
+                        />
+                        {errors.fecha_ingreso && <div className="text-red-600 mt-1">{errors.fecha_ingreso}</div>}
+                    </div>
                     <div className="mt-6 text-center">
                         <button
                             type="submit"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 
@@ -250,7 +250,7 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
                     </div>
                 </div>
 
-                <div className="flex justify-center mt-8">
+                <div className="flex justify-center mt-8 gap-16">
                     <button
                         type="submit"
                         className="bg-blue-500 text-white py-2 px-6 rounded-full"
@@ -258,6 +258,14 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
                     >
                         {processing ? 'Cargando...' : 'Registrar Pago'}
                     </button>
+                    <Link
+                        type="submit"
+                        className="bg-slate-700 text-white py-2 px-6 rounded-full"
+                        href={route('pago_servicios.index', { id: cliente.id })}
+                        disabled={processing}
+                    >
+                        {processing ? 'Cargando...' : 'Ver Historial'}
+                    </Link>
                 </div>
             </form>
         </AuthenticatedLayout>

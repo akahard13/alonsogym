@@ -142,7 +142,7 @@ class PagoServiciosController extends Controller
                     'id_pago_servicio' => $pago->id
                 ]);
                 DB::commit();
-                return redirect()->route('pago_servicios.index', ['cliente' => $request->cliente])
+                return redirect()->route('clientes.index', ['cliente' => $request->cliente])
                     ->with('success', 'Pago registrado correctamente.');
             } catch (\Exception $e) {
                 DB::rollBack();

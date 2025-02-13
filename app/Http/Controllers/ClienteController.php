@@ -29,7 +29,8 @@ class ClienteController extends Controller
             $servicios = Servicio::Where('activo', true)->get();
             $tipo_pagos = TipoPagoServicio::all();
             $generos = Genero::all(); // Obtener los géneros disponibles
-            return Inertia::render('Clientes/Create', ['generos' => $generos, 'servicios' => $servicios, 'tipo_pagos' => $tipo_pagos]);
+            $fecha = new DateTime();
+            return Inertia::render('Clientes/Create', ['generos' => $generos, 'servicios' => $servicios, 'tipo_pagos' => $tipo_pagos, 'fecha' => $fecha->format('Y-m-d')]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
@@ -72,6 +73,7 @@ class ClienteController extends Controller
                 'fecha_pago' => 'required|date',
                 'precio' => 'required|numeric|min:0',
                 'fecha_vencimiento' => 'required|date',
+                'fecha_ingreso' => 'required|date',
             ]);
             $nombre = ucwords(strtolower($request->nombre));
             $cliente = Cliente::create([
@@ -84,7 +86,7 @@ class ClienteController extends Controller
             ]);
             $servicio = Servicio::find($request->servicio);
             $tipo_pago = TipoPagoServicio::find($request->tipo_pago);
-            $pago=PagoServicio::create([
+            $pago = PagoServicio::create([
                 'cliente' => $cliente->id,
                 'servicio' => $request->servicio,
                 'tipo_pago' => $request->tipo_pago,
@@ -92,7 +94,8 @@ class ClienteController extends Controller
                 'precio' => $request->precio,
                 'fecha_vencimiento' => $request->fecha_vencimiento
             ]);
-            $fecha_ingreso = new DateTime();
+            $fecha_ingreso = new DateTime($request->fecha_ingreso);
+
             Ingresos::create([
                 'categoria' => 1,
                 'fecha' => $fecha_ingreso->format('Y-m-d'),
