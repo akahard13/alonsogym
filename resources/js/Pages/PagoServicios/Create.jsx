@@ -259,7 +259,6 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
                         {processing ? 'Cargando...' : 'Registrar Pago'}
                     </button>
                     <Link
-                        type="submit"
                         className="bg-slate-700 text-white py-2 px-6 rounded-full"
                         href={route('pago_servicios.index', { id: cliente.id })}
                         disabled={processing}

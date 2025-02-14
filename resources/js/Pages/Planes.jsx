@@ -100,7 +100,7 @@ const Planes = ({ clientes, auth }) => {
                                 </td>
                                 {rol === AdminRol && (
                                     <td className="flex justify-around space-x-4">
-                                        <Link href={route('pago_servicios.index', cliente.id)}
+                                        <Link href={route('pago_servicios.create', cliente.id)}
                                             className="text-cyan-900 hover:text-green-700"
                                         >
                                             <RiMoneyDollarCircleLine className='w-8 h-8' title='Pagar' />
