@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 
-const Create = ({ persona }) => {
+const Create = ({ persona, fecha }) => {
     const { data, setData, post, processing, errors } = useForm({
         personal: persona.id,
-        fecha_pago: '',
+        fecha_pago: fecha ? fecha : '',
         monto: '0.00',
         descripcion: '', // Inicialmente vacía
         salario: false,
@@ -103,7 +103,7 @@ const Create = ({ persona }) => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-6 text-center">
+                <div className="flex justify-center mt-8 gap-16">
                     <button
                         type="submit"
                         disabled={processing}
@@ -111,6 +111,13 @@ const Create = ({ persona }) => {
                     >
                         {processing ? 'Guardando...' : 'Guardar'}
                     </button>
+                    <Link
+                        className="bg-slate-700 text-white py-2 px-6 rounded-lg text-center hover:bg-slate-800 "
+                        href={route('pago_personal.index', { id: persona.id })}
+                        disabled={processing}
+                    >
+                        {processing ? 'Cargando...' : 'Ver Historial'}
+                    </Link>
                 </div>
             </form>
         </AuthenticatedLayout>

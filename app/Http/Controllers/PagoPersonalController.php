@@ -18,6 +18,7 @@ class PagoPersonalController extends Controller
 
     public function __construct()
     {
+        date_default_timezone_set('America/Managua');
         $this->admin = env('ADMIN_ROL', 1);
     }
 
@@ -35,7 +36,8 @@ class PagoPersonalController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            return Inertia::render('PagosPersonal/Create', ['persona' => $personal]);
+            $fecha = new DateTime();
+            return Inertia::render('PagosPersonal/Create', ['persona' => $personal, 'fecha' => $fecha->format('Y-m-d')]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');
     }
@@ -51,7 +53,7 @@ class PagoPersonalController extends Controller
                 'descripcion' => 'nullable|string|max:255',
             ]);
             $fecha_pago = new DateTime($request->fecha_pago);
-            $pago=PagoPersonal::create(
+            $pago = PagoPersonal::create(
                 [
                     'personal' => $request->personal,
                     'fecha_pago' => $fecha_pago->format('Y-m-d'),

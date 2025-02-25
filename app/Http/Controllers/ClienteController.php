@@ -169,7 +169,7 @@ class ClienteController extends Controller
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
     }
-    private function obtenerClientes($estado = true)
+    /*private function obtenerClientes($estado = true)
     {
         $clientes = DB::table('clientes as cli')
             ->join('pago_servicios as ps', function ($join) {
@@ -206,5 +206,44 @@ class ClienteController extends Controller
         });
 
         return $clientes->toArray();
+    }*/
+    private function obtenerClientes($estado = true)
+    {
+        $clientes = DB::table('clientes as cli')
+            ->join('pago_servicios as ps', function ($join) {
+                $join->on('cli.id', '=', 'ps.cliente')
+                    ->whereRaw('ps.fecha_pago = (SELECT MAX(sub_ps.fecha_pago) FROM pago_servicios AS sub_ps WHERE sub_ps.cliente = cli.id)');
+            })
+            ->join('generos as g', 'cli.genero', '=', 'g.id')
+            ->join('servicios as s', 'ps.servicio', '=', 's.id')
+            ->select(
+                'cli.id',
+                'cli.nombre',
+                'cli.codigo',
+                'ps.fecha_pago',
+                'ps.fecha_vencimiento',
+                'g.nombre as genero',
+                's.nombre as servicio',
+                DB::raw('CASE 
+                     WHEN NOW()::date <= ps.fecha_vencimiento::date THEN true 
+                     ELSE false 
+                 END AS estado'),
+                DB::raw('CASE 
+                     WHEN NOW()::date = ps.fecha_vencimiento::date THEN \'Último día\' 
+                     ELSE ((ps.fecha_vencimiento::date - NOW()::date)::text || \' días\') 
+                 END AS dias_restantes'),
+                DB::raw('(ps.fecha_vencimiento::date - NOW()::date) AS dias_restantes_numerico')
+            );
+
+        if (!$estado) {
+            $clientes->whereRaw('(ps.fecha_vencimiento::date - NOW()::date) > -10');
+        }
+        $clientes = $clientes->orderBy('dias_restantes_numerico', 'asc')->get();
+
+        $clientes = $clientes->filter(function ($cliente) use ($estado) {
+            return $cliente->estado == $estado;
+        });
+
+        return $clientes->values()->toArray();
     }
 }
