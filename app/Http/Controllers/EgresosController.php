@@ -20,14 +20,20 @@ class EgresosController extends Controller
     }
     public function index()
     {
-        $egresos = Egresos::with('categoria')->get();
-        return Inertia::render('Finanzas/Main', [
-            'datos' => $egresos,
-            'editar' => 'egresos.edit',
-            'eliminar' => 'egresos.destroy',
-            'create' => 'egresos.create',
-            'titulo' => 'Egresos'
-        ]);
+        $user_rol = Auth::user()->rol;
+        if ($user_rol == $this->admin) {
+            $egresos = Egresos::with('categoria')->get();
+            return Inertia::render('Finanzas/Main', [
+                'datos' => $egresos,
+                'editar' => 'egresos.edit',
+                'eliminar' => 'egresos.destroy',
+                'create' => 'egresos.create',
+                'titulo' => 'Egresos',
+                'fecha' => date('Y-m-d'),
+                'categorias' => Categorias::where('egreso', true)->get()
+            ]);
+        }
+        return Inertia::render('NoPermissions');
     }
     public function create()
     {

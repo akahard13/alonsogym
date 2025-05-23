@@ -15,12 +15,6 @@ export default function AuthenticatedLayout({ header, children }) {
     const renderCommonLinks = () => (
         <>
             <NavLink
-                href={route('dashboard')}
-                active={route().current('dashboard')}
-            >
-                Dashboard
-            </NavLink>
-            <NavLink
                 href={route('clientes.index')}
                 active={route().current('clientes.index')}
             >
@@ -50,6 +44,12 @@ export default function AuthenticatedLayout({ header, children }) {
     // Función para renderizar los enlaces de administrador
     const renderAdminLinks = () => (
         <>
+            <NavLink
+                href={route('dashboard')}
+                active={route().current('dashboard')}
+            >
+                Dashboard
+            </NavLink>
             <NavLink
                 href={route('personal.index')}
                 active={route().current('personal.index')}
@@ -81,12 +81,6 @@ export default function AuthenticatedLayout({ header, children }) {
     const renderResponsiveCommonLinks = () => (
         <>
             <ResponsiveNavLink
-                href={route('dashboard')}
-                active={route().current('dashboard')}
-            >
-                Dashboard
-            </ResponsiveNavLink>
-            <ResponsiveNavLink
                 href={route('clientes.index')}
                 active={route().current('clientes.index')}
             >
@@ -116,6 +110,12 @@ export default function AuthenticatedLayout({ header, children }) {
     // Función para renderizar los enlaces de administrador en el navbar responsive
     const renderResponsiveAdminLinks = () => (
         <>
+            <ResponsiveNavLink
+                href={route('dashboard')}
+                active={route().current('dashboard')}
+            >
+                Dashboard
+            </ResponsiveNavLink>
             <ResponsiveNavLink
                 href={route('personal.index')}
                 active={route().current('personal.index')}

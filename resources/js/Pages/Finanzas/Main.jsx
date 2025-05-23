@@ -7,7 +7,7 @@ import { RiMoneyDollarCircleLine } from "react-icons/ri";
 import { AdminRol } from '@/Info/Roles';
 import ConfirmModal from '@/Components/ConfirmModal';
 
-const Main = ({ datos, auth, editar, eliminar, create, titulo, fecha }) => {
+const Main = ({ datos, auth, editar, eliminar, create, titulo, fecha, categorias }) => {
     const rol = auth.user.rol;
     const [searchTerm, setSearchTerm] = useState('');
     const [startDate, setStartDate] = useState(fecha);
@@ -71,7 +71,24 @@ const Main = ({ datos, auth, editar, eliminar, create, titulo, fecha }) => {
                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
                 />
             </div>
-
+            <div className="mb-4">
+                <label htmlFor="categoria_id" className="block text-sm font-medium text-gray-700">
+                    Categoría
+                </label>
+                <select
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                >
+                    <option value="">
+                        Selecciona una categoría
+                    </option>
+                    {categorias.map((categoria) => (
+                        <option key={categoria.id} value={categoria.nombre}>
+                            {categoria.nombre}
+                        </option>
+                    ))}
+                </select>
+            </div>
             {/* Filtro de fechas */}
             <div className="my-4 flex space-x-4">
                 <input

@@ -21,15 +21,19 @@ class IngresosController extends Controller
     }
     public function index()
     {
-        $ingresos = Ingresos::with('categoria')->get();
-        return Inertia::render('Finanzas/Main', [
-            'datos' => $ingresos,
-            'editar' => 'ingresos.edit',
-            'eliminar' => 'ingresos.destroy',
-            'create' => 'ingresos.create',
-            'titulo' => 'Ingresos',
-            'fecha' => date('Y-m-d')
-        ]);
+        $user_rol = Auth::user()->rol;
+        if ($user_rol == $this->admin) {
+            $ingresos = Ingresos::with('categoria')->get();
+            return Inertia::render('Finanzas/Main', [
+                'datos' => $ingresos,
+                'editar' => 'ingresos.edit',
+                'eliminar' => 'ingresos.destroy',
+                'create' => 'ingresos.create',
+                'titulo' => 'Ingresos',
+                'fecha' => date('Y-m-d')
+            ]);
+        }
+        return Inertia::render('NoPermissions');
     }
     public function create()
     {
@@ -92,7 +96,7 @@ class IngresosController extends Controller
      */
     public function destroy(Ingresos $ingresos)
     {
-        $id_pago = $ingresos->id_pago_servicio??null;
+        $id_pago = $ingresos->id_pago_servicio ?? null;
         $pago_servicio = PagoServicio::find($id_pago);
         $ingresos->delete();
         if ($pago_servicio) {

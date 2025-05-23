@@ -7,6 +7,7 @@ use App\Models\Egresos;
 use App\Models\Ingresos;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use PHPUnit\TextUI\Output\NullPrinter;
@@ -23,9 +24,13 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $info = $this->getInformation();
-        $finanzas = $this->getFinanzas();
-        return Inertia::render('Dashboard', ['info' => $info, 'finanzas' => $finanzas]);
+        $user_rol = Auth::user()->rol;
+        if ($user_rol == $this->admin) {
+            $info = $this->getInformation();
+            $finanzas = $this->getFinanzas();
+            return Inertia::render('Dashboard', ['info' => $info, 'finanzas' => $finanzas]);
+        }
+        return Inertia::render('NoPermissions');
     }
 
     private function getInformation(): array
@@ -120,7 +125,7 @@ class DashboardController extends Controller
         $totalEgresos = Egresos::whereMonth('fecha', $mesActual)
             ->whereYear('fecha', $anioActual)
             ->sum('total');
-            $ganacias=(float)$totalIngresos - (float)$totalEgresos;
+        $ganacias = (float)$totalIngresos - (float)$totalEgresos;
         return [
             'ingresos' => number_format($totalIngresos, 2),
             'egresos' => number_format($totalEgresos, 2),
