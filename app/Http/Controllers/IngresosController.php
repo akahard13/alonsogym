@@ -30,7 +30,8 @@ class IngresosController extends Controller
                 'eliminar' => 'ingresos.destroy',
                 'create' => 'ingresos.create',
                 'titulo' => 'Ingresos',
-                'fecha' => date('Y-m-d')
+                'fecha' => date('Y-m-d'),
+                'categorias' => Categorias::where('egreso', true)->get()
             ]);
         }
         return Inertia::render('NoPermissions');
