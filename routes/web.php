@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DashboardController;
@@ -89,6 +90,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Rutas para asistencias
+    Route::get('/asistencias', [AttendancesController::class, 'index'])->name('asistencias.index');
+    Route::post('/asistencias/marcar', [AttendancesController::class, 'marcar'])->name('asistencias.marcar');
+
 });
 
 require __DIR__ . '/auth.php';
