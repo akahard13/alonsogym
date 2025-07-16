@@ -19,7 +19,9 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Auth/Login');
 });
-
+// Rutas para asistencias
+Route::get('/asistencias', [AttendancesController::class, 'index'])->name('asistencias.index');
+Route::post('/asistencias/marcar', [AttendancesController::class, 'marcar'])->name('asistencias.marcar');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Rutas para roles
@@ -90,11 +92,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Rutas para asistencias
-    Route::get('/asistencias', [AttendancesController::class, 'index'])->name('asistencias.index');
-    Route::post('/asistencias/marcar', [AttendancesController::class, 'marcar'])->name('asistencias.marcar');
-
 });
 
 require __DIR__ . '/auth.php';

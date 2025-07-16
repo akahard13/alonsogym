@@ -21,45 +21,37 @@ class AttendancesController extends Controller
 
     public function index()
     {
-        $user_rol = Auth::user()->rol;
-        if ($user_rol == $this->admin) {
-            return Inertia::render('AttendancesRegister');
-        }
-        return back()->with('permission', 'No tiene permiso para realizar esta acción');
+        return Inertia::render('AttendancesRegister');
     }
 
     public function marcar(Request $request)
     {
-        $user_rol = Auth::user()->rol;
-        if ($user_rol == $this->admin) {
-            $request->validate([
-                'codigo' => 'required|Numeric|max_digits:4|min_digits:4',
-            ]);
-            $cliente = Cliente::where('codigo', $request->codigo)->first();
-            if ($cliente) {
-                $info = $this->getInformacion($cliente->id);
-                if (!$info) {
-                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' no tiene ningun plan activo');
-                } else if ($info->dias_restantes_numerico < 0) {
-                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' ha expirado el ' . $info->fecha_vencimiento);
-                } else if ($info->dias_restantes_numerico == 0) {
-                    $res = $this->guardarAsistencia($cliente->id);
-                    if (!$res) {
-                        return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
-                    }
-                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' expira hoy.');
-                } else {
-                    $res = $this->guardarAsistencia($cliente->id);
-                    if (!$res) {
-                        return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
-                    }
-                    return back()->with('success', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' expira en ' . $info->dias_restantes_numerico . ' dias el ' . $info->fecha_vencimiento);
+        $request->validate([
+            'codigo' => 'required|Numeric|max_digits:4|min_digits:4',
+        ]);
+        $cliente = Cliente::where('codigo', $request->codigo)->first();
+        if ($cliente) {
+            $info = $this->getInformacion($cliente->id);
+            if (!$info) {
+                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' no tiene ningun plan activo');
+            } else if ($info->dias_restantes_numerico < 0) {
+                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' ha expirado el ' . $info->fecha_vencimiento);
+            } else if ($info->dias_restantes_numerico == 0) {
+                $res = $this->guardarAsistencia($cliente->id);
+                if (!$res) {
+                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
+                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' expira hoy.');
             } else {
-                return back()->with('permission', 'El codigo ingresado no pertenece a ningún cliente');
+                $res = $this->guardarAsistencia($cliente->id);
+                if (!$res) {
+                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
+                }
+                return back()->with('success', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' expira en ' . $info->dias_restantes_numerico . ' dias el ' . $info->fecha_vencimiento);
             }
+        } else {
+            return back()->with('permission', 'El codigo ingresado no pertenece a ningún cliente');
         }
-        return back()->with('permission', 'No tiene permiso para realizar estaacción');
     }
     private function getInformacion($clienteId = null)
     {

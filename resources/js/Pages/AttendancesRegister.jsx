@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import GuestLayout from '@/Layouts/GuestLayout';
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { CgTrash } from "react-icons/cg";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
@@ -43,14 +43,8 @@ const Planes = ({ clientes, auth }) => {
     };
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Clientes
-                </h2>
-            }
-        >
-            <Head title="Clientes Totales" />
+        <GuestLayout>
+            <Head title="Marcar Asistencia" />
             <div className="my-4">
                 {flash.success && (
                     <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">
@@ -104,7 +98,7 @@ const Planes = ({ clientes, auth }) => {
                     </div>
                 </form>
             </div>
-        </AuthenticatedLayout>
+        </GuestLayout>
     );
 };
 
