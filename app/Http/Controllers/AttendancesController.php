@@ -128,8 +128,3 @@ class AttendancesController extends Controller
         return back()->with('permission', 'No tiene permiso para realizar estaacción');
     }
 }
-
-            // Devolver las asistencias en formato de JSON
-
-        // Si no tiene permiso, redirigir a la página de inicio con un mensaje de error
-        return back()->with('permission', 'No tiene permiso para realizar esta acción');
