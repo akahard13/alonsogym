@@ -92,6 +92,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Rutas para asistencias
+    Route::get('/asistencias/informe', [AttendancesController::class, 'informeAsistencias'])->name('asistencias.informe');
+    Route::get('/asistencias/obtener', [AttendancesController::class, 'obtenerAsistencias'])->name('asistencias.obtener');
 });
 
 require __DIR__ . '/auth.php';

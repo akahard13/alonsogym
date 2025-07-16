@@ -82,4 +82,55 @@ class AttendancesController extends Controller
             throw new \Exception($e, 1);
         }
     }
+
+    public function informeAsistencias()
+    {
+        $user_rol = Auth::user()->rol;
+        $fecha = now()->format('Y-m-d');
+        if ($user_rol == $this->admin) {
+            $asistencias = DB::table('asistencias as a')
+                ->join('clientes as c', 'a.cliente_id', '=', 'c.id')
+                ->select(
+                    'a.id',
+                    'c.id  as cliente_id',
+                    'c.nombre as nombre_completo',
+                    'c.codigo',
+                    DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia")
+                )
+                ->where('a.fecha_registro', '=', $fecha)
+                ->orderByDesc('a.fecha_registro')
+                ->get();
+            return Inertia::render('Asistencias/Informe', [
+                'asistencias' => $asistencias,
+                'defaultDate' => $fecha
+            ]);
+        }
+
+        return back()->with('permission', 'No tiene permiso para realizar esta acción');
+    }
+    public function obtenerAsistencias(Request $request)
+    {
+        $user_rol = Auth::user()->rol;
+        if ($user_rol == $this->admin) {
+            $asistencias = DB::table('asistencias as a')
+                ->join('clientes as c', 'a.cliente_id', '=', 'c.id')
+                ->select(
+                    'a.id',
+                    'c.id  as cliente_id',
+                    'c.nombre as nombre_completo',
+                    'c.codigo',
+                    'a.fecha_registro as fecha_asistencia'
+                )
+                ->where('a.fecha_registro', '=', $request->fecha)
+                ->orderByDesc('a.fecha_registro')
+                ->get();
+            return response()->json($asistencias);
+        }
+        return back()->with('permission', 'No tiene permiso para realizar estaacción');
+    }
 }
+
+            // Devolver las asistencias en formato de JSON
+
+        // Si no tiene permiso, redirigir a la página de inicio con un mensaje de error
+        return back()->with('permission', 'No tiene permiso para realizar esta acción');

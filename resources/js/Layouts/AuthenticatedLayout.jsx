@@ -38,6 +38,12 @@ export default function AuthenticatedLayout({ header, children }) {
             >
                 Servicios
             </NavLink>
+            <NavLink
+                href={route('asistencias.informe')}
+                active={route().current('asistencias.informe')}
+            >
+                Informe Asistencias
+            </NavLink>
         </>
     );
 
@@ -139,6 +145,12 @@ export default function AuthenticatedLayout({ header, children }) {
                 active={route().current('egresos.index')}
             >
                 Egresos
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+                href={route('asistencias.informe')}
+                active={route().current('asistencias.informe')}
+            >
+                Informe Asistencias
             </ResponsiveNavLink>
         </>
     );
