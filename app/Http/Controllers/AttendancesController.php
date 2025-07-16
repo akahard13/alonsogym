@@ -105,8 +105,7 @@ class AttendancesController extends Controller
                 'defaultDate' => $fecha
             ]);
         }
-
-        return back()->with('permission', 'No tiene permiso para acceder a esta página.');
+        return Inertia::render('NoPermissions');
     }
     public function obtenerAsistencias(Request $request)
     {
