@@ -106,7 +106,7 @@ class AttendancesController extends Controller
             ]);
         }
 
-        return back()->with('permission', 'No tiene permiso para realizar esta acción');
+        return back()->with('permission', 'No tiene permiso para acceder a esta página.');
     }
     public function obtenerAsistencias(Request $request)
     {
