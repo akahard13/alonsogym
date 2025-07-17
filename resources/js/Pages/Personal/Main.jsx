@@ -40,58 +40,60 @@ const Main = ({ personal, auth }) => {
             )}
             {flash.success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">{flash.success}</div>}
             {flash.permission && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mt-4">{flash.permission}</div>}
-            <table className="min-w-full divide-y">
-                <thead>
-                    <tr className="bg-gray-200">
-                        <th className="text-left px-4 py-2 hidden">ID</th>
-                        <th className="text-left px-4 py-2">Nombres</th>
-                        <th className="text-left px-4 py-2 hidden ">Género</th>
-                        <th className="text-left px-4 py-2">cargo</th>
-                        <th className="text-left px-4 py-2">celular</th>
-                        <th className="text-left px-4 py-2">Fecha contratación</th>
-                        <th className="text-left px-4 py-2">salario</th>
-                        {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                    {personal && personal.map((per) => (
-                        <tr key={per.id} className="items-center">
-                            <td className="text-left px-4 py-2 hidden ">{per.id}</td>
-                            <td className="text-left px-4 py-2">{per.nombres} {per.apellidos}</td>
-                            <td className="text-left px-4 py-2 hidden ">{per.genero.nombre}</td>
-                            <td className="text-left px-4 py-2 hidden ">{per.cargo}</td>
-                            <td className="text-left px-4 py-2">{per.celular}</td>
-                            <td className="text-left px-4 py-2">
-                                {new Intl.DateTimeFormat('es-ES', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric',
-                                }).format(new Date(per.fecha_contratacion))}
-                            </td>
-                            <td className="text-left px-4 py-2">{per.salario}</td>
-                            {rol === AdminRol && (
-                                <td className="flex justify-around space-x-4">
-                                    <Link href={route('pago_personal.create', per.id)} className="text-cyan-900 hover:text-green-700">
-                                        <RiMoneyDollarCircleLine className="w-8 h-8" title="Pagar" />
-                                    </Link>
-                                    <Link
-                                        href={route('personal.edit', per.id)}
-                                        className="text-cyan-900 mr-2 hover:text-blue-700"
-                                    >
-                                        <HiOutlinePencilSquare className="w-8 h-8" title="Editar" />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDeleteClick(per.id)}
-                                        className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
-                                    >
-                                        <CgTrash className="w-8 h-8" title="Eliminar" />
-                                    </button>
-                                </td>
-                            )}
+            <div className="w-full overflow-x-auto mt-4">
+                <table className="min-w-full divide-y divide-slate-500 overflow-scroll">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="text-left px-4 py-2 ">ID</th>
+                            <th className="text-left px-4 py-2">Nombres</th>
+                            <th className="text-left px-4 py-2  ">Género</th>
+                            <th className="text-left px-4 py-2">cargo</th>
+                            <th className="text-left px-4 py-2">celular</th>
+                            <th className="text-left px-4 py-2">Fecha contratación</th>
+                            <th className="text-left px-4 py-2">salario</th>
+                            {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className='divide-y'>
+                        {personal && personal.map((per) => (
+                            <tr key={per.id} className="items-center">
+                                <td className="text-left px-4 py-2  ">{per.id}</td>
+                                <td className="text-left px-4 py-2">{per.nombres} {per.apellidos}</td>
+                                <td className="text-left px-4 py-2  ">{per.genero.nombre}</td>
+                                <td className="text-left px-4 py-2  ">{per.cargo}</td>
+                                <td className="text-left px-4 py-2">{per.celular}</td>
+                                <td className="text-left px-4 py-2">
+                                    {new Intl.DateTimeFormat('es-ES', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                    }).format(new Date(per.fecha_contratacion))}
+                                </td>
+                                <td className="text-left px-4 py-2">{per.salario}</td>
+                                {rol === AdminRol && (
+                                    <td className="flex justify-around space-x-4">
+                                        <Link href={route('pago_personal.create', per.id)} className="text-cyan-900 hover:text-green-700">
+                                            <RiMoneyDollarCircleLine className="w-8 h-8" title="Pagar" />
+                                        </Link>
+                                        <Link
+                                            href={route('personal.edit', per.id)}
+                                            className="text-cyan-900 mr-2 hover:text-blue-700"
+                                        >
+                                            <HiOutlinePencilSquare className="w-8 h-8" title="Editar" />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDeleteClick(per.id)}
+                                            className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
+                                        >
+                                            <CgTrash className="w-8 h-8" title="Eliminar" />
+                                        </button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <ConfirmModal
                 show={showModal}
                 title="¿Estás seguro de que quieres eliminar este miembro del personal?"

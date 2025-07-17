@@ -109,61 +109,63 @@ const Main = ({ datos, auth, editar, eliminar, create, titulo, fecha, categorias
 
             {flash.success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">{flash.success}</div>}
             {flash.permission && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mt-4">{flash.permission}</div>}
-
-            <table className="w-full mt-4 border-collapse border border-gray-300">
-                <thead>
-                    <tr className="bg-gray-200">
-                        <th className="text-left px-4 py-2">Descripción</th>
-                        <th className="text-left px-4 py-2">Fecha</th>
-                        <th className="text-left px-4 py-2">Categoría</th>
-                        <th className="text-right px-4 py-2">Total</th>
-                        {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredDatos.length > 0 ? (
-                        filteredDatos.map((dato, index) => (
-                            <tr key={index} className="border-b">
-                                <td className="px-4 py-2">{dato.descripcion}</td>
-                                <td className="px-4 py-2">{dato.fecha}</td>
-                                <td className="px-4 py-2">{dato.categoria.nombre}</td>
-                                <td className="px-4 py-2 text-right">{dato.total}</td>
-                                {rol === AdminRol && (
-                                    <td className="flex justify-around space-x-4">
-                                        <Link
-                                            href={route(editar, dato.id)}
-                                            className="text-cyan-900 mr-2 hover:text-blue-700"
-                                        >
-                                            <HiOutlinePencilSquare className='w-8 h-8' title='Editar' />
-                                        </Link>
-                                        <button
-                                            onClick={() => handleDeleteClick(dato.id)}
-                                            className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
-                                        >
-                                            <CgTrash className='w-8 h-8' title='Eliminar' />
-                                        </button>
-                                    </td>
-                                )}
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="5" className="text-center px-4 py-2">
-                                No se encontraron datos.
-                            </td>
+            <div className="w-full overflow-x-auto mt-4">
+                <table className="w-full mt-4 border-collapse border border-gray-300">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="text-left px-4 py-2">Descripción</th>
+                            <th className="text-left px-4 py-2">Fecha</th>
+                            <th className="text-left px-4 py-2">Categoría</th>
+                            <th className="text-right px-4 py-2">Total</th>
+                            {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
                         </tr>
-                    )}
-                </tbody>
-                {/* Fila de totales */}
-                <tfoot>
-                    <tr className="bg-gray-100">
-                        <td colSpan="3" className="text-left px-4 py-2 font-bold">Total</td>
-                        <td className="text-right px-4 py-2 font-bold">{totalSum.toFixed(2)}</td>
-                        {rol === AdminRol && <td className="px-4 py-2"></td>}
-                    </tr>
-                </tfoot>
-            </table>
-
+                    </thead>
+                    <tbody>
+                        {filteredDatos.length > 0 ? (
+                            filteredDatos.map((dato, index) => (
+                                <tr key={index} className="border-b">
+                                    <td className="px-4 py-2 align-middle">{dato.descripcion}</td>
+                                    <td className="px-4 py-2 align-middle">{dato.fecha}</td>
+                                    <td className="px-4 py-2 align-middle">{dato.categoria.nombre}</td>
+                                    <td className="px-4 py-2 text-right align-middle">{dato.total}</td>
+                                    {rol === AdminRol && (
+                                        <td className="px-4 py-2 align-middle">
+                                            <div className="flex justify-around space-x-4 items-center">
+                                                <Link
+                                                    href={route(editar, dato.id)}
+                                                    className="text-cyan-900 mr-2 hover:text-blue-700"
+                                                >
+                                                    <HiOutlinePencilSquare className="w-8 h-8" title="Editar" />
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleDeleteClick(dato.id)}
+                                                    className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
+                                                >
+                                                    <CgTrash className="w-8 h-8" title="Eliminar" />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    )}
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="5" className="text-center px-4 py-2">
+                                    No se encontraron datos.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                    {/* Fila de totales */}
+                    <tfoot>
+                        <tr className="bg-gray-100">
+                            <td colSpan="3" className="text-left px-4 py-2 font-bold">Total</td>
+                            <td className="text-right px-4 py-2 font-bold">{totalSum.toFixed(2)}</td>
+                            {rol === AdminRol && <td className="px-4 py-2"></td>}
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
             <ConfirmModal
                 show={showModal}
                 title="¿Estás seguro de que quieres eliminarlo?"

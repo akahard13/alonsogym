@@ -41,41 +41,43 @@ export function Main({ auth }) {
                     </Link>
                 </div>
             )}
-            <table className="w-full mt-4 border">
-                <thead>
-                    <tr className="bg-gray-200">
-                        <th className="text-left px-4 py-2">ID</th>
-                        <th className="text-left px-4 py-2">Nombre</th>
-                        {rol === AdminRol && permissionBuilt && (
-                            <th className="text-center px-4 py-2">Acciones</th>
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {roles.map((role) => (
-                        <tr key={role.id}>
-                            <td className="text-left px-4 py-2">{role.id}</td>
-                            <td className="text-left px-4 py-2">{role.nombre}</td>
+            <div className="w-full overflow-x-auto mt-4">
+                <table className="min-w-full divide-y divide-slate-500 overflow-scroll mt-4 border">
+                    <thead>
+                        <tr className="bg-gray-200">
+                            <th className="text-left px-4 py-2">ID</th>
+                            <th className="text-left px-4 py-2">Nombre</th>
                             {rol === AdminRol && permissionBuilt && (
-                                <td className="flex justify-around space-x-4">
-                                    <Link
-                                        href={route('roles.edit', role.id)}
-                                        className="text-cyan-900 mr-2 hover:text-blue-700"
-                                    >
-                                        <HiOutlinePencilSquare className='w-8 h-8' title='Editar' />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDeleteClick(role.id)}
-                                        className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
-                                    >
-                                        <CgTrash className='w-8 h-8' title='Eliminar' />
-                                    </button>
-                                </td>
+                                <th className="text-center px-4 py-2">Acciones</th>
                             )}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {roles.map((role) => (
+                            <tr key={role.id}>
+                                <td className="text-left px-4 py-2">{role.id}</td>
+                                <td className="text-left px-4 py-2">{role.nombre}</td>
+                                {rol === AdminRol && permissionBuilt && (
+                                    <td className="flex justify-around space-x-4">
+                                        <Link
+                                            href={route('roles.edit', role.id)}
+                                            className="text-cyan-900 mr-2 hover:text-blue-700"
+                                        >
+                                            <HiOutlinePencilSquare className='w-8 h-8' title='Editar' />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDeleteClick(role.id)}
+                                            className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
+                                        >
+                                            <CgTrash className='w-8 h-8' title='Eliminar' />
+                                        </button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <ConfirmModal
                 show={showModal}
                 title="¿Estás seguro de que quieres eliminar este cliente?"
