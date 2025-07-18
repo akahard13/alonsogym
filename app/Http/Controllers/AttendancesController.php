@@ -35,19 +35,23 @@ class AttendancesController extends Controller
             if (!$info) {
                 return back()->with('permission', 'Estimado ' . $cliente->nombre . ' no tiene ningun plan activo');
             } else if ($info->dias_restantes_numerico < 0) {
-                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' ha expirado el ' . $info->fecha_vencimiento);
+                $res = $this->guardarAsistencia($cliente->id, false);
+                if (!$res) {
+                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
+                }
+                return back()->with('permission', 'Estimado ' . $cliente->nombre . 'se ha marcado asistencia el dia de hoy en su plan ' . $info->tipo_pago . ' que ha expirado el ' . $info->fecha_vencimiento);
             } else if ($info->dias_restantes_numerico == 0) {
                 $res = $this->guardarAsistencia($cliente->id);
                 if (!$res) {
                     return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
-                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' expira hoy.');
+                return back()->with('permission', 'Estimado ' . $cliente->nombre . 'se ha marcado asistencia el día de hoy en su plan ' . $info->tipo_pago . ' que expira hoy.');
             } else {
                 $res = $this->guardarAsistencia($cliente->id);
                 if (!$res) {
                     return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
-                return back()->with('success', 'Estimado ' . $cliente->nombre . ' su plan ' . $info->tipo_pago . ' expira en ' . $info->dias_restantes_numerico . ' dias el ' . $info->fecha_vencimiento);
+                return back()->with('success', 'Estimado ' . $cliente->nombre . ' se ha marcado asistencia el día de hoy en su plan ' . $info->tipo_pago . '  que expira en ' . $info->dias_restantes_numerico . ' dias el ' . $info->fecha_vencimiento);
             }
         } else {
             return back()->with('permission', 'El codigo ingresado no pertenece a ningún cliente');
@@ -64,7 +68,7 @@ class AttendancesController extends Controller
             ->select('ps.fecha_pago',  'ps.fecha_vencimiento', 'tp.nombre as tipo_pago', DB::raw('(ps.fecha_vencimiento::date - NOW()::date) AS dias_restantes_numerico'))
             ->where('ps.cliente', $clienteId)->first();
     }
-    private function guardarAsistencia($clienteId)
+    private function guardarAsistencia($clienteId, $plan = true)
     {
         $cliente = Cliente::find($clienteId);
         try {
@@ -74,6 +78,7 @@ class AttendancesController extends Controller
             } else {
                 Asistencias::create([
                     'cliente_id' => $cliente->id,
+                    'plan_activo'=> $plan,
                     'fecha_registro' => now()
                 ]);
                 return true;
@@ -95,6 +100,7 @@ class AttendancesController extends Controller
                     'c.id  as cliente_id',
                     'c.nombre as nombre_completo',
                     'c.codigo',
+                    'a.plan_activo',
                     DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia")
                 )
                 ->where('a.fecha_registro', '=', $fecha)
