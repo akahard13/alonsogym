@@ -73,7 +73,7 @@ const Planes = ({ clientes, auth }) => {
             <div className="my-4">
                 {showSuccess && (
                     <div className="bg-green-100 border border-green-400 text-green-700  px-6 py-4 rounded mb-4 mt-4 relative">
-                        <button onClick={() => setShowSuccess(false)} className="h-8 border border-red-400 w-8 absolute right-2 top-2 text-lg">&times;</button>
+                        <button onClick={() => setShowSuccess(false)} className="h-8 border border-green-400 w-8 absolute right-2 top-2 text-lg">&times;</button>
                         {flash.success}
                     </div>
                 )}

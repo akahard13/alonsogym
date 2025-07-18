@@ -12,6 +12,7 @@ class Asistencias extends Model
 
     protected $fillable = [
         'cliente_id',
+        'plan_activo',
         'fecha_registro',
     ];
 
