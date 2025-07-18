@@ -236,7 +236,7 @@ class ClienteController extends Controller
             );
 
         if (!$estado) {
-            $clientes->whereRaw('(ps.fecha_vencimiento::date - NOW()::date) > -10');
+            $clientes->whereRaw('(ps.fecha_vencimiento::date - NOW()::date) > -30');
         }
         $clientes = $clientes->orderBy('dias_restantes_numerico', 'asc')->get();
 
