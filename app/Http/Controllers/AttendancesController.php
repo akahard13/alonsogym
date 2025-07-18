@@ -79,7 +79,7 @@ class AttendancesController extends Controller
             } else {
                 Asistencias::create([
                     'cliente_id' => $cliente->id,
-                    'plan_activo'=> $plan,
+                    'plan_activo' => $plan,
                     'fecha_registro' => now(),
                     "hora_registro" => now()->format('H:i:s')
                 ]);
@@ -97,6 +97,17 @@ class AttendancesController extends Controller
         if ($user_rol == $this->admin) {
             $asistencias = DB::table('asistencias as a')
                 ->join('clientes as c', 'a.cliente_id', '=', 'c.id')
+                ->leftJoin(DB::raw('
+                    (
+                        SELECT ps1.*
+                        FROM pago_servicios ps1
+                        INNER JOIN (
+                            SELECT cliente, MAX(id) as max_id
+                            FROM pago_servicios
+                            GROUP BY cliente
+                        ) latest ON ps1.id = latest.max_id
+                    ) as ps
+                '), 'ps.cliente', '=', 'c.id')
                 ->select(
                     'a.id',
                     'c.id  as cliente_id',
@@ -104,7 +115,8 @@ class AttendancesController extends Controller
                     'c.codigo',
                     'a.hora_registro',
                     'a.plan_activo',
-                    DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia")
+                    DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia"),
+                    'ps.fecha_vencimiento'
                 )
                 ->where('a.fecha_registro', '=', $fecha)
                 ->orderByDesc('a.fecha_registro')

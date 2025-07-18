@@ -91,6 +91,7 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
               <th className="px-4 py-2 text-left">Fecha</th>
               <th className="px-4 py-2 text-left">Hora</th>
               <th className="px-4 py-2 text-left">Estado del plan</th>
+              <th className="px-4 py-2 text-left">Fecha vencimiento</th>
             </tr>
           </thead>
           <tbody>
@@ -105,9 +106,20 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
                   <td className="px-4 py-2 text-left">{a.hora_registro}</td>
                   <td className="px-4 py-2 text-left">
                     <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md bg-orange-100 text-orange-800}`}
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${a.plan_activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}
+
                     >
-                      {!a.plan_activo? 'Vencido' : 'Activo'}
+                      {!a.plan_activo ? 'Vencido' : 'Activo'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 text-left">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${a.plan_activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}
+
+                    >
+                      {a.fecha_vencimiento}
                     </span>
                   </td>
                 </tr>
