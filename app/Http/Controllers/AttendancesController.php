@@ -33,25 +33,25 @@ class AttendancesController extends Controller
         if ($cliente) {
             $info = $this->getInformacion($cliente->id);
             if (!$info) {
-                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' no tiene ningun plan activo');
+                return back()->with('permission', 'Estimado(a) ' . $cliente->nombre . ' no tiene ningun plan activo');
             } else if ($info->dias_restantes_numerico < 0) {
                 $res = $this->guardarAsistencia($cliente->id, false);
                 if (!$res) {
-                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
+                    return back()->with('permission', 'Estimado(a) ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
-                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' se ha marcado asistencia el dia de hoy en su plan ' . $info->tipo_pago . ' que ha expirado el ' . $info->fecha_vencimiento);
+                return back()->with('permission', 'Estimado(a) ' . $cliente->nombre . ' se ha marcado asistencia el dia de hoy en su plan ' . $info->tipo_pago . ' que ha expirado el ' . $info->fecha_vencimiento);
             } else if ($info->dias_restantes_numerico == 0) {
                 $res = $this->guardarAsistencia($cliente->id);
                 if (!$res) {
-                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
+                    return back()->with('permission', 'Estimado(a) ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
-                return back()->with('permission', 'Estimado ' . $cliente->nombre . 'se ha marcado asistencia el día de hoy en su plan ' . $info->tipo_pago . ' que expira hoy.');
+                return back()->with('permission', 'Estimado(a) ' . $cliente->nombre . 'se ha marcado asistencia el día de hoy en su plan ' . $info->tipo_pago . ' que expira hoy.');
             } else {
                 $res = $this->guardarAsistencia($cliente->id);
                 if (!$res) {
-                    return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
+                    return back()->with('permission', 'Estimado(a) ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
-                return back()->with('success', 'Estimado ' . $cliente->nombre . ' se ha marcado asistencia el día de hoy en su plan ' . $info->tipo_pago . '  que expira en ' . $info->dias_restantes_numerico . ' dias el ' . $info->fecha_vencimiento);
+                return back()->with('success', 'Estimado(a) ' . $cliente->nombre . ' se ha marcado asistencia el día de hoy en su plan ' . $info->tipo_pago . '  que expira en ' . $info->dias_restantes_numerico . ' dias el ' . $info->fecha_vencimiento);
             }
         } else {
             return back()->with('permission', 'El codigo ingresado no pertenece a ningún cliente');
