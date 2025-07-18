@@ -14,9 +14,7 @@ class Asistencias extends Model
         'cliente_id',
         'plan_activo',
         'fecha_registro',
-    ];
-    protected $casts = [
-        'fecha_registro' => 'date:Y-m-d',
+        'hora_registro'
     ];
     public function cliente()
     {

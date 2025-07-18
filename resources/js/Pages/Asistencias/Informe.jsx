@@ -89,6 +89,7 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
               <th className="px-4 py-2 text-left">Cliente</th>
               <th className="px-4 py-2 text-left">Código</th>
               <th className="px-4 py-2 text-left">Fecha</th>
+              <th className="px-4 py-2 text-left">Hora</th>
               <th className="px-4 py-2 text-left">Estado del plan</th>
             </tr>
           </thead>
@@ -101,6 +102,7 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
                   <td className="px-4 py-2 text-left">
                     {a.fecha_asistencia}
                   </td>
+                  <td className="px-4 py-2 text-left">{a.hora_registro}</td>
                   <td className="px-4 py-2 text-left">
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md bg-orange-100 text-orange-800}`}
