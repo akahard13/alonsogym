@@ -16,6 +16,7 @@ class AttendancesController extends Controller
 
     public function __construct()
     {
+        date_default_timezone_set('America/Managua');
         $this->admin = env('ADMIN_ROL', 1);
     }
 
@@ -72,14 +73,14 @@ class AttendancesController extends Controller
     {
         $cliente = Cliente::find($clienteId);
         try {
-            $asistencias = Asistencias::where('cliente_id', $cliente->id)->where('fecha_registro', now())->first();
+            $asistencias = Asistencias::where('cliente_id', $cliente->id)->where('fecha_registro', now()->format('Y-m-d'))->first();
             if ($asistencias) {
                 return false;
             } else {
                 Asistencias::create([
                     'cliente_id' => $cliente->id,
                     'plan_activo'=> $plan,
-                    'fecha_registro' => now()
+                    'fecha_registro' => now()->format('Y-m-d H:i:s')
                 ]);
                 return true;
             }

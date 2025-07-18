@@ -15,7 +15,9 @@ class Asistencias extends Model
         'plan_activo',
         'fecha_registro',
     ];
-
+    protected $casts = [
+        'fecha_registro' => 'date:Y-m-d',
+    ];
     public function cliente()
     {
         return $this->belongsTo(Cliente::class);
