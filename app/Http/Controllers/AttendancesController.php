@@ -108,7 +108,7 @@ class AttendancesController extends Controller
                 )
                 ->where('a.fecha_registro', '=', $fecha)
                 ->orderByDesc('a.fecha_registro')
-                ->orderBy('a.hora_registro', 'asc')
+                ->orderBy('a.hora_registro', 'desc')
                 ->get();
             return Inertia::render('Asistencias/Informe', [
                 'asistencias' => $asistencias,
