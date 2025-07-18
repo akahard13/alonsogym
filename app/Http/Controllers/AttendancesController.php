@@ -39,7 +39,7 @@ class AttendancesController extends Controller
                 if (!$res) {
                     return back()->with('permission', 'Estimado ' . $cliente->nombre . ' usted ya tiene registrada asistencia el dia de hoy');
                 }
-                return back()->with('permission', 'Estimado ' . $cliente->nombre . 'se ha marcado asistencia el dia de hoy en su plan ' . $info->tipo_pago . ' que ha expirado el ' . $info->fecha_vencimiento);
+                return back()->with('permission', 'Estimado ' . $cliente->nombre . ' se ha marcado asistencia el dia de hoy en su plan ' . $info->tipo_pago . ' que ha expirado el ' . $info->fecha_vencimiento);
             } else if ($info->dias_restantes_numerico == 0) {
                 $res = $this->guardarAsistencia($cliente->id);
                 if (!$res) {

@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { HiOutlinePencilSquare } from "react-icons/hi2";
-import { CgTrash } from "react-icons/cg";
-import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import { AdminRol } from '@/Info/Roles';
-import ConfirmModal from '@/Components/ConfirmModal';
 
 const Planes = ({ clientes, auth }) => {
     const { data, setData, post, processing, reset, errors } = useForm({
@@ -14,9 +9,35 @@ const Planes = ({ clientes, auth }) => {
 
     const [loading, setLoading] = useState(false);
     const { flash } = usePage().props;
+    const [showSuccess, setShowSuccess] = useState(!!flash.success);
+    const [showPermission, setShowPermission] = useState(!!flash.permission);
+    useEffect(() => {
+        if (flash.success) {
+            setShowSuccess(true);
+            const timer = setTimeout(() => {
+                setShowSuccess(false);
+            }, 7000);
+            return () => clearTimeout(timer);
+        }
+    }, [flash.success]);
 
-    const handleMarcarAsistencia = (e) => {
-        e.preventDefault();
+    useEffect(() => {
+        if (flash.permission) {
+            setShowPermission(true);
+            const timer = setTimeout(() => {
+                setShowPermission(false);
+            }, 7000);
+            return () => clearTimeout(timer);
+        }
+    }, [flash.permission]);
+
+
+    useEffect(() => {
+        if (data.codigo.length === 4) {
+            marcarAsistencia();
+        }
+    }, [data.codigo]);
+    const marcarAsistencia = () => {
         if (!data.codigo) {
             alert("Debes ingresar un código antes de marcar asistencia");
             return;
@@ -30,6 +51,10 @@ const Planes = ({ clientes, auth }) => {
             },
             onFinish: () => setLoading(false),
         });
+    }
+    const handleMarcarAsistencia = (e) => {
+        e.preventDefault();
+        marcarAsistencia();
     };
 
     const handleNumericClick = (num) => {
@@ -46,16 +71,19 @@ const Planes = ({ clientes, auth }) => {
         <GuestLayout>
             <Head title="Marcar Asistencia" />
             <div className="my-4">
-                {flash.success && (
-                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mt-4">
+                {showSuccess && (
+                    <div className="bg-green-100 border border-green-400 text-green-700  px-6 py-4 rounded mb-4 mt-4 relative">
+                        <button onClick={() => setShowSuccess(false)} className="h-8 border border-red-400 w-8 absolute right-2 top-2 text-lg">&times;</button>
                         {flash.success}
                     </div>
                 )}
-                {flash.permission && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mt-4">
+                {showPermission && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded mb-4 mt-4 relative">
+                        <button onClick={() => setShowPermission(false)} className="h-8 border border-red-400 w-8 absolute right-2 top-2 text-lg">&times;</button>
                         {flash.permission}
                     </div>
                 )}
+
 
                 {/* Formulario de asistencia */}
                 <form onSubmit={handleMarcarAsistencia}>
