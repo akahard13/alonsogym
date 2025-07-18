@@ -9,13 +9,10 @@ const Planes = ({ clientes, auth }) => {
 
     const [loading, setLoading] = useState(false);
     const { flash } = usePage().props;
-    const [showSuccess, setShowSuccess] = useState(!!flash.success);
-    const [showPermission, setShowPermission] = useState(!!flash.permission);
     useEffect(() => {
         if (flash.success) {
-            setShowSuccess(true);
             const timer = setTimeout(() => {
-                setShowSuccess(false);
+                location.reload();
             }, 7000);
             return () => clearTimeout(timer);
         }
@@ -23,9 +20,8 @@ const Planes = ({ clientes, auth }) => {
 
     useEffect(() => {
         if (flash.permission) {
-            setShowPermission(true);
             const timer = setTimeout(() => {
-                setShowPermission(false);
+                location.reload();
             }, 7000);
             return () => clearTimeout(timer);
         }
@@ -71,13 +67,13 @@ const Planes = ({ clientes, auth }) => {
         <GuestLayout>
             <Head title="Marcar Asistencia" />
             <div className="my-4">
-                {showSuccess && (
+                {flash.success && (
                     <div className="bg-green-100 border border-green-400 text-green-700  px-6 py-4 rounded mb-4 mt-4 relative">
                         <button onClick={() => setShowSuccess(false)} className="h-8 border border-green-400 w-8 absolute right-2 top-2 text-lg">&times;</button>
                         {flash.success}
                     </div>
                 )}
-                {showPermission && (
+                {flash.permission && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded mb-4 mt-4 relative">
                         <button onClick={() => setShowPermission(false)} className="h-8 border border-red-400 w-8 absolute right-2 top-2 text-lg">&times;</button>
                         {flash.permission}
