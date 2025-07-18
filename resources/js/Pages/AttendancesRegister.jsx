@@ -32,11 +32,11 @@ const Planes = ({ clientes, auth }) => {
     }, [flash.permission]);
 
 
-    useEffect(() => {
-        if (data.codigo.length === 4) {
-            marcarAsistencia();
-        }
-    }, [data.codigo]);
+    // useEffect(() => {
+    //     if (data.codigo.length === 4) {
+    //         marcarAsistencia();
+    //     }
+    // }, [data.codigo]);
     const marcarAsistencia = () => {
         if (!data.codigo) {
             alert("Debes ingresar un código antes de marcar asistencia");
