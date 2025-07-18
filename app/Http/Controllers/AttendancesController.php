@@ -73,7 +73,7 @@ class AttendancesController extends Controller
     {
         $cliente = Cliente::find($clienteId);
         try {
-            $asistencias = Asistencias::where('cliente_id', $cliente->id)->where('fecha_registro', now()->format('Y-m-d'))->first();
+            $asistencias = Asistencias::where('cliente_id', $cliente->id)->where('fecha_registro', now())->first();
             if ($asistencias) {
                 return false;
             } else {
