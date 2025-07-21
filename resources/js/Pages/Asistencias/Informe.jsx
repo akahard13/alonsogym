@@ -147,63 +147,65 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
       {loading ? (
         <p className="text-center text-gray-500">Cargando asistencias…</p>
       ) : (
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2 text-left">Cliente</th>
-              <th className="px-4 py-2 text-left">Código</th>
-              <th className="px-4 py-2 text-left">Fecha</th>
-              <th className="px-4 py-2 text-left">Hora</th>
-              <th className="px-4 py-2 text-left">Estado del plan</th>
-              <th className="px-4 py-2 text-left">Fecha vencimiento</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtradas.length ? (
-              filtradas.map((a) => (
-                <tr key={a.id} className="border-t">
-                  <td className="px-4 py-2 text-left">{a.nombre_completo}</td>
-                  <td className="px-4 py-2 text-left">{a.codigo}</td>
-                  <td className="px-4 py-2 text-left">{a.fecha_asistencia}</td>
-                  <td className="px-4 py-2 text-left">{a.hora_registro}</td>
-                  <td className="px-4 py-2 text-left">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${a.plan_activo
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                        }`}
-                    >
-                      {a.plan_activo ? 'Activo' : 'Vencido'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 text-left">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${a.plan_activo
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                        }`}
-                    >
-                      {a.fecha_vencimiento}
-                    </span>
+        <div className="w-full overflow-x-auto mt-4">
+          <table className="min-w-full divide-y divide-slate-500 overflow-scroll mt-4">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="px-4 py-2 text-left">Cliente</th>
+                <th className="px-4 py-2 text-left">Código</th>
+                <th className="px-4 py-2 text-left">Fecha</th>
+                <th className="px-4 py-2 text-left">Hora</th>
+                <th className="px-4 py-2 text-left">Estado del plan</th>
+                <th className="px-4 py-2 text-left">Fecha vencimiento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtradas.length ? (
+                filtradas.map((a) => (
+                  <tr key={a.id} className="border-t">
+                    <td className="px-4 py-2 text-left">{a.nombre_completo}</td>
+                    <td className="px-4 py-2 text-left">{a.codigo}</td>
+                    <td className="px-4 py-2 text-left">{a.fecha_asistencia}</td>
+                    <td className="px-4 py-2 text-left">{a.hora_registro}</td>
+                    <td className="px-4 py-2 text-left">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${a.plan_activo
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                          }`}
+                      >
+                        {a.plan_activo ? 'Activo' : 'Vencido'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-left">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${a.plan_activo
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                          }`}
+                      >
+                        {a.fecha_vencimiento}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center text-gray-500 py-4">
+                    No se encontraron resultados
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center text-gray-500 py-4">
-                  No se encontraron resultados
+              )}
+            </tbody>
+            <tfoot>
+              <tr className="bg-gray-100 font-semibold">
+                <td colSpan="6" className="px-4 py-2 text-right">
+                  Total: {filtradas.length}
                 </td>
               </tr>
-            )}
-          </tbody>
-          <tfoot>
-            <tr className="bg-gray-100 font-semibold">
-              <td colSpan="6" className="px-4 py-2 text-right">
-                Total: {filtradas.length}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+            </tfoot>
+          </table>
+        </div>
       )}
     </AuthenticatedLayout>
   );
