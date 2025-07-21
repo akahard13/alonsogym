@@ -130,7 +130,7 @@ class AttendancesController extends Controller
                     'a.hora_registro',
                     'a.plan_activo',
                     DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia"),
-                    'a.fecha_vencimiento',
+                    DB::raw("TO_CHAR(a.fecha_vencimiento, 'DD/MM/YYYY') as fecha_vencimiento")
                     //DB::raw("case when a.fecha_vencimiento is null then ps.fecha_vencimiento else a.fecha_vencimiento end as fecha_vencimiento")
                 )
                 ->where('a.fecha_registro', '=', $fecha)
@@ -169,7 +169,7 @@ class AttendancesController extends Controller
                     'a.hora_registro',
                     'a.plan_activo',
                     DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia"),
-                    'a.fecha_vencimiento',
+                    DB::raw("TO_CHAR(a.fecha_vencimiento, 'DD/MM/YYYY') as fecha_vencimiento")
                     //DB::raw("case when a.fecha_vencimiento is null then ps.fecha_vencimiento else a.fecha_vencimiento end as fecha_vencimiento")
                 )
                 ->where('a.fecha_registro', '=', $request->fecha)
