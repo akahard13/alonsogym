@@ -14,7 +14,8 @@ class Asistencias extends Model
         'cliente_id',
         'plan_activo',
         'fecha_registro',
-        'hora_registro'
+        'hora_registro',
+        'fecha_vencimiento'
     ];
     public function cliente()
     {

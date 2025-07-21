@@ -73,6 +73,19 @@ class AttendancesController extends Controller
     {
         $cliente = Cliente::find($clienteId);
         try {
+            $subquery = DB::table('pago_servicios as ps1')
+                ->join(
+                    DB::raw('(SELECT cliente, MAX(id) as max_id FROM pago_servicios GROUP BY cliente) as latest'),
+                    'ps1.id',
+                    '=',
+                    'latest.max_id'
+                )
+                ->select('ps1.*')
+                ->where('ps1.cliente', $cliente->id);
+
+            $fecha_vencimiento = DB::table(DB::raw("({$subquery->toSql()}) as ps"))
+                ->mergeBindings($subquery)
+                ->get();
             $asistencias = Asistencias::where('cliente_id', $cliente->id)->where('fecha_registro', now())->first();
             if ($asistencias) {
                 return false;
@@ -81,7 +94,8 @@ class AttendancesController extends Controller
                     'cliente_id' => $cliente->id,
                     'plan_activo' => $plan,
                     'fecha_registro' => now(),
-                    "hora_registro" => now()->format('H:i:s')
+                    "hora_registro" => now()->format('H:i:s'),
+                    'fecha_vencimiento' => $fecha_vencimiento[0]->fecha_vencimiento
                 ]);
                 return true;
             }
@@ -97,17 +111,17 @@ class AttendancesController extends Controller
         if ($user_rol == $this->admin) {
             $asistencias = DB::table('asistencias as a')
                 ->join('clientes as c', 'a.cliente_id', '=', 'c.id')
-                ->leftJoin(DB::raw('
-                    (
-                        SELECT ps1.*
-                        FROM pago_servicios ps1
-                        INNER JOIN (
-                            SELECT cliente, MAX(id) as max_id
-                            FROM pago_servicios
-                            GROUP BY cliente
-                        ) latest ON ps1.id = latest.max_id
-                    ) as ps
-                '), 'ps.cliente', '=', 'c.id')
+                // ->leftJoin(DB::raw('
+                //     (
+                //         SELECT ps1.*
+                //         FROM pago_servicios ps1
+                //         INNER JOIN (
+                //             SELECT cliente, MAX(id) as max_id
+                //             FROM pago_servicios
+                //             GROUP BY cliente
+                //         ) latest ON ps1.id = latest.max_id
+                //     ) as ps
+                // '), 'ps.cliente', '=', 'c.id')
                 ->select(
                     'a.id',
                     'c.id  as cliente_id',
@@ -116,7 +130,8 @@ class AttendancesController extends Controller
                     'a.hora_registro',
                     'a.plan_activo',
                     DB::raw("TO_CHAR(a.fecha_registro, 'DD/MM/YYYY') as fecha_asistencia"),
-                    'ps.fecha_vencimiento'
+                    'a.fecha_vencimiento',
+                    //DB::raw("case when a.fecha_vencimiento is null then ps.fecha_vencimiento else a.fecha_vencimiento end as fecha_vencimiento")
                 )
                 ->where('a.fecha_registro', '=', $fecha)
                 ->orderByDesc('a.fecha_registro')
