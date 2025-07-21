@@ -26,6 +26,7 @@ class PagoServicio extends Model
         'precio',
         'fecha_pago',
         'fecha_vencimiento',
+        'activo'
     ];
 
     // The attributes that should be cast to native types

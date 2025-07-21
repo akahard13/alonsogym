@@ -94,7 +94,12 @@ class PagoServiciosController extends Controller
             $ultimoPago = $this->ultimo_pago($cliente->id);
             $tipo_pagos = TipoPagoServicio::all();
             return Inertia::render('PagoServicios/Create', [
-                'fecha' => $fecha->format('Y-m-d'), 'cliente' => $cliente, 'servicios' => $servicios, 'tipo_pagos' => $tipo_pagos, 'ultimoPago' => $ultimoPago]);
+                'fecha' => $fecha->format('Y-m-d'),
+                'cliente' => $cliente,
+                'servicios' => $servicios,
+                'tipo_pagos' => $tipo_pagos,
+                'ultimoPago' => $ultimoPago
+            ]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');
     }
@@ -120,6 +125,8 @@ class PagoServiciosController extends Controller
             DB::beginTransaction();
 
             try {
+                PagoServicio::where('cliente', $request->cliente)
+                    ->update(['activo' => false]);
                 $fecha_pago = new DateTime($request->fecha_pago);
                 $fecha_ingreso = new DateTime($request->fecha_ingreso);
                 $fecha_vencimiento = new DateTime($request->fecha_vencimiento);
@@ -129,7 +136,8 @@ class PagoServiciosController extends Controller
                     'tipo_pago' => $request->tipo_pago,
                     'fecha_pago' => $fecha_pago->format('Y-m-d'),
                     'precio' => $request->precio,
-                    'fecha_vencimiento' => $fecha_vencimiento->format('Y-m-d')
+                    'fecha_vencimiento' => $fecha_vencimiento->format('Y-m-d'),
+                    'activo' => true
                 ]);
                 $cliente = Cliente::find($request->cliente);
                 $servicio = Servicio::find($request->servicio);

@@ -212,7 +212,8 @@ class ClienteController extends Controller
         $clientes = DB::table('clientes as cli')
             ->join('pago_servicios as ps', function ($join) {
                 $join->on('cli.id', '=', 'ps.cliente')
-                    ->whereRaw('ps.fecha_pago = (SELECT MAX(sub_ps.fecha_pago) FROM pago_servicios AS sub_ps WHERE sub_ps.cliente = cli.id)');
+                    //->whereRaw('ps.fecha_pago = (SELECT MAX(sub_ps.fecha_pago) FROM pago_servicios AS sub_ps WHERE sub_ps.cliente = cli.id)');
+                    ->where('ps.activo', true);
             })
             ->join('generos as g', 'cli.genero', '=', 'g.id')
             ->join('servicios as s', 'ps.servicio', '=', 's.id')
@@ -243,7 +244,6 @@ class ClienteController extends Controller
         $clientes = $clientes->filter(function ($cliente) use ($estado) {
             return $cliente->estado == $estado;
         });
-
         return $clientes->values()->toArray();
     }
 }
