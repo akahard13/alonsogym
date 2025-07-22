@@ -79,19 +79,19 @@ const Planes = ({ clientes, auth }) => {
                                     <td className="text-left px-4 py-2 ">{cliente.genero}</td>
                                     <td className="text-left px-4 py-2">{cliente.codigo}</td>
                                     <td className="text-left px-4 py-2">{cliente.servicio}</td>
-                                    <td className="text-left px-4 py-2">
-                                        {cliente.fecha_vencimiento && !isNaN(new Date(cliente.fecha_vencimiento)) ? (
-                                            new Intl.DateTimeFormat('es-ES', {
-                                                day: '2-digit',
-                                                month: '2-digit',
-                                                year: 'numeric',
-                                                timeZone: 'UTC',
-                                            }).format(new Date(cliente.fecha_vencimiento + 'Z'))
-                                        ) : (
-                                            'Sin fecha'
-                                        )}
-                                    </td>
+                                    {/* <td className="text-left px-4 py-2">
+                                        {new Intl.DateTimeFormat('es-ES', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                            timeZone: 'UTC'  // 👈 Fuerza el formato UTC
+                                        }).format(new Date(cliente.fecha_vencimiento + 'Z'))}
 
+
+                                    </td> */}
+                                    <td className="text-left px-4 py-2">
+                                        {cliente.fecha_vencimiento}
+                                    </td>
                                     <td className="text-left px-4 py-2">
                                         <span
                                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-md ${cliente.estado ? "bg-orange-100 text-orange-800" : "bg-red-100 text-red-800"}`}

@@ -21,9 +21,9 @@ class PagoServicio extends Model
         'activo'
     ];
     protected $casts = [
-        'fecha_pago' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'fecha_pago' => 'date:Y-m-d',
+        'created_at' => 'date:Y-m-d',
+        'updated_at' => 'date:Y-m-d',
     ];
     public function cliente()
     {
