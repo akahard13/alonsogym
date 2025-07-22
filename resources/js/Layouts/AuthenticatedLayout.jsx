@@ -7,6 +7,13 @@ import { useState } from 'react';
 import { AdminRol } from '@/Info/Roles';
 
 export default function AuthenticatedLayout({ header, children }) {
+    {
+        process.env.NODE_ENV === 'development' && (
+            <pre className="bg-yellow-100 p-2 text-xs overflow-x-auto">
+                {JSON.stringify(usePage().props, null, 2)}
+            </pre>
+        )
+    }
     const user = usePage().props.auth.user;
     const roles = usePage().props.auth.user.rol;
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
