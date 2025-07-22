@@ -8,7 +8,9 @@ import { AdminRol } from '@/Info/Roles';
 import ConfirmModal from '@/Components/ConfirmModal';
 const Planes = ({ clientes, auth }) => {
     const [searchTerm, setSearchTerm] = useState('');
-    const clientesArray = Array.isArray(clientes) ? clientes : Object.values(clientes);
+    //const clientesArray = Array.isArray(clientes) ? clientes : Object.values(clientes);
+    const clientesArray = Array.isArray(clientes) ? clientes : Object.values(clientes || {});
+
     const [showModal, setShowModal] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const { delete: destroy } = useForm();
