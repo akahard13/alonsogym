@@ -4,19 +4,16 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 
 const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
-    let fechaVencimientoInicial = ultimoPago?.fecha_vencimiento
-        ? new Date(ultimoPago.fecha_vencimiento)
-        : new Date(fecha);
-
-    if (!isNaN(fechaVencimientoInicial.getTime() && ultimoPago)) {
-        fechaVencimientoInicial.setDate(fechaVencimientoInicial.getDate() + 1);
-    } else if (!ultimoPago) {
-        fechaVencimientoInicial = new Date(fecha); 
-    }
-
+    const fechaVencimientoInicial = ultimoPago?.fecha_vencimiento
+        ? (() => {
+            const date = new Date(ultimoPago.fecha_vencimiento);
+            date.setDate(date.getDate() + 1);
+            return date.toISOString().slice(0, 10);
+        })()
+        : fecha;
     const { data, setData, post, processing, errors } = useForm({
         cliente: cliente.id,
-        fecha_pago: ultimoPago ? fechaVencimientoInicial.toISOString().split('T')[0] : fecha, // Corrección de typo (ultimPago → ultimoPago)
+        fecha_pago: fechaVencimientoInicial,
         servicio: ultimoPago?.id_servicio || '',
         tipo_pago: ultimoPago?.id_tipo_pago || '',
         precio: ultimoPago?.precio || '0.00',
