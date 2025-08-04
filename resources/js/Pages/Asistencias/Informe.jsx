@@ -241,7 +241,7 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
           </table>
           <ConfirmModal
             show={showModal}
-            title="¿Estás seguro de que quieres eliminar esta categoría?"
+            title="¿Estás seguro de que quieres eliminar esta asistencia?"
             onClose={() => setShowModal(false)}
             onConfirm={handleConfirm}
           />
