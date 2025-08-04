@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
     // Rutas para asistencias
     Route::get('/asistencias/informe', [AttendancesController::class, 'informeAsistencias'])->name('asistencias.informe');
     Route::get('/asistencias/obtener', [AttendancesController::class, 'obtenerAsistencias'])->name('asistencias.obtener');
+    Route::delete('/asistencias/{asistencia}', [AttendancesController::class, 'eliminarAsistencia'])->name('asistencias.destroy');
 });
 
 require __DIR__ . '/auth.php';

@@ -67,6 +67,7 @@ const Planes = ({ clientes, auth }) => {
                             <th className="text-left px-4 py-2">Servicio</th>
                             <th className="text-left px-4 py-2">Fecha de vencimiento</th>
                             <th className="text-left px-4 py-2 ">Restantes</th>
+                            <th className="text-left px-4 py-2 ">Puntos</th>
                             {rol === AdminRol && (<th className="text-center px-4 py-2">Acciones</th>)}
                         </tr>
                     </thead>
@@ -100,6 +101,7 @@ const Planes = ({ clientes, auth }) => {
                                         </span>
 
                                     </td>
+                                    <td className="text-left px-4 py-2">{cliente.total_puntos} pts</td>
                                     {rol === AdminRol && (
                                         <td className="flex justify-around space-x-4">
                                             <Link href={route('pago_servicios.create', cliente.id)}

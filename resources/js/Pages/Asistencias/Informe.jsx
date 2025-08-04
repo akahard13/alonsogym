@@ -1,13 +1,19 @@
 import React, { useState, useMemo } from 'react';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-
+import { HiOutlinePencilSquare } from 'react-icons/hi2';
+import { CgTrash } from 'react-icons/cg';
+import { AdminRol } from '@/Info/Roles';
+import ConfirmModal from '@/Components/ConfirmModal';
 const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
   const [search, setSearch] = useState('');
   const [hourRange, setHourRange] = useState('');
   const [dateFilter, setDateFilter] = useState(
     defaultDate ?? new Date().toISOString().slice(0, 10)
   );
+  const [selectedId, setSelectedId] = useState(null);
+  const { delete: destroy } = useForm();
+  const [showModal, setShowModal] = useState(false);
   const [startHour, setStartHour] = useState('');
   const [endHour, setEndHour] = useState('');
   const [asistencias, setAsistencias] = useState(() =>
@@ -72,7 +78,24 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
   }, [asistencias, search, hourRange, startHour, endHour]);
 
   const { flash } = usePage().props;
+  const isAdmin = auth.user.rol === AdminRol;
+  const handleDeleteClick = (id) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
 
+  const handleConfirm = () => {
+    destroy(route('asistencias.destroy', selectedId), {
+      preserveScroll: true,
+      onSuccess: () => {
+        setAsistencias((prev) => prev.filter((a) => a.id !== selectedId));
+        setShowModal(false);
+      },
+      onError: () => {
+        setShowModal(false);
+      }
+    });
+  };
   return (
     <AuthenticatedLayout
       header={
@@ -157,6 +180,7 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
                 <th className="px-4 py-2 text-left">Hora</th>
                 <th className="px-4 py-2 text-left">Estado del plan</th>
                 <th className="px-4 py-2 text-left">Fecha vencimiento</th>
+                <th className='px-4 py-2 text-left'>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -187,6 +211,16 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
                         {a.fecha_vencimiento}
                       </span>
                     </td>
+                    {isAdmin && (
+                      <td className="flex justify-around space-x-4">
+                        <button
+                          onClick={() => handleDeleteClick(a.id)}
+                          className="text-cyan-900 hover:text-red-700 font-bold py-1 px-2 rounded mr-2"
+                        >
+                          <CgTrash className='w-8 h-8' title='Eliminar' />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (
@@ -199,12 +233,18 @@ const Informe = ({ asistencias: initialAsistencias, auth, defaultDate }) => {
             </tbody>
             <tfoot>
               <tr className="bg-gray-100 font-semibold">
-                <td colSpan="6" className="px-4 py-2 text-right">
+                <td colSpan="7" className="px-4 py-2 text-right">
                   Total: {filtradas.length}
                 </td>
               </tr>
             </tfoot>
           </table>
+          <ConfirmModal
+            show={showModal}
+            title="¿Estás seguro de que quieres eliminar esta categoría?"
+            onClose={() => setShowModal(false)}
+            onConfirm={handleConfirm}
+          />
         </div>
       )}
     </AuthenticatedLayout>

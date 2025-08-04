@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asistencias;
 use App\Models\Categorias;
 use App\Models\Cliente;
+use App\Models\Puntos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -97,6 +98,10 @@ class AttendancesController extends Controller
                     "hora_registro" => now()->format('H:i:s'),
                     'fecha_vencimiento' => $fecha_vencimiento[0]->fecha_vencimiento
                 ]);
+                // $puntos = new Puntos();
+                // $puntos->cliente = $cliente->id;
+                // $puntos->puntos = 10;
+                // $puntos->save();
                 return true;
             }
         } catch (\Exception $e) {
@@ -178,6 +183,15 @@ class AttendancesController extends Controller
                 ->get();
             return response()->json($asistencias);
         }
-        return back()->with('permission', 'No tiene permiso para realizar estaacción');
+        return back()->with('permission', 'No tiene permiso para realizar esta acción');
+    }
+    public function eliminarAsistencia(Asistencias $asistencia)
+    {
+        $user_rol = Auth::user()->rol;
+        if ($user_rol == $this->admin) {
+            $asistencia->delete();
+            return redirect()->route('asistencias.informe')->with('success', 'Asistencia eliminada correctamente.');
+        }
+        return back()->with('permission', 'No tiene permiso para realizar esta acción');
     }
 }
