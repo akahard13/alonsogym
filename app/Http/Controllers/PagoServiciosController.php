@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Asistencias;
 use App\Models\Cliente;
 use App\Models\Egresos;
 use App\Models\Ingresos;
@@ -89,6 +90,7 @@ class PagoServiciosController extends Controller
     {
         $user_rol = Auth::user()->rol;
         $fecha = new DateTime();
+        $asistencia = Asistencias::where('cliente_id', $cliente->id)->orderBy('id', 'desc')->first();
         if ($user_rol == $this->admin) {
             $servicios = Servicio::where('activo', true)->get();
             $ultimoPago = $this->ultimo_pago($cliente->id);
@@ -98,7 +100,8 @@ class PagoServiciosController extends Controller
                 'cliente' => $cliente,
                 'servicios' => $servicios,
                 'tipo_pagos' => $tipo_pagos,
-                'ultimoPago' => $ultimoPago
+                'ultimoPago' => $ultimoPago,
+                'asistencia' => $asistencia->plan_activo ? null : $asistencia
             ]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');

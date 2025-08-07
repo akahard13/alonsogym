@@ -3,7 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import TextInput from '@/Components/TextInput';
 
-const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
+const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha, asistencia }) => {
     const fechaVencimientoInicial = ultimoPago?.fecha_vencimiento
         ? (() => {
             const date = new Date(ultimoPago.fecha_vencimiento);
@@ -135,6 +135,31 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha }) => {
             <Head title="Pagos clientes" />
             <h1 className="text-2xl font-bold mb-6 text-center">Registrar nuevo pago cliente</h1>
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                {asistencia && (
+                    <div className="bg-red-100 border border-red-300 rounded-md p-4 mb-6 shadow-sm">
+                        <h2 className="text-xl text-red-600 font-semibold mb-3">Alerta Última Asistencia</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <span className="block font-semibold text-gray-600">Plan activo:</span>
+                                <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+                                    {asistencia.plan_activo ? 'Sí' : 'No'}
+                                </span>
+                            </div>
+                            <div>
+                                <span className="block font-semibold text-gray-600">Fecha de registro:</span>
+                                <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{asistencia.fecha_registro}</span>
+                            </div>
+                            <div>
+                                <span className="block font-semibold text-gray-600">Hora de registro:</span>
+                                <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{asistencia.hora_registro}</span>
+                            </div>
+                            <div>
+                                <span className="block font-semibold text-gray-600">Fecha de vencimiento:</span>
+                                <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{asistencia.fecha_vencimiento}</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
                         <label htmlFor="clientel" className="block font-semibold mb-2">Cliente</label>
