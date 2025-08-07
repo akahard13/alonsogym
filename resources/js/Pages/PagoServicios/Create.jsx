@@ -138,23 +138,17 @@ const Create = ({ cliente, ultimoPago, servicios, tipo_pagos, fecha, asistencia 
                 {asistencia && (
                     <div className="bg-red-100 border border-red-300 rounded-md p-4 mb-6 shadow-sm">
                         <h2 className="text-xl text-red-600 font-semibold mb-3">Alerta Última Asistencia</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <span className="block font-semibold text-gray-600">Plan activo:</span>
-                                <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
-                                    {asistencia.plan_activo ? 'Sí' : 'No'}
-                                </span>
-                            </div>
-                            <div>
-                                <span className="block font-semibold text-gray-600">Fecha de registro:</span>
+                                <span className="block font-semibold text-gray-600">Asistió el:</span>
                                 <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{asistencia.fecha_registro}</span>
                             </div>
                             <div>
-                                <span className="block font-semibold text-gray-600">Hora de registro:</span>
+                                <span className="block font-semibold text-gray-600">Hora de asistencia:</span>
                                 <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{asistencia.hora_registro}</span>
                             </div>
                             <div>
-                                <span className="block font-semibold text-gray-600">Fecha de vencimiento:</span>
+                                <span className="block font-semibold text-gray-600">Plan vencido desde:</span>
                                 <span className={asistencia.plan_activo ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>{asistencia.fecha_vencimiento}</span>
                             </div>
                         </div>
