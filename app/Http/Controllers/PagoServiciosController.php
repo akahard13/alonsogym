@@ -21,6 +21,7 @@ use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Whoops\Exception\Formatter;
+use Carbon\Carbon;
 
 class PagoServiciosController extends Controller
 {
@@ -90,7 +91,18 @@ class PagoServiciosController extends Controller
     {
         $user_rol = Auth::user()->rol;
         $fecha = new DateTime();
-        $asistencia = Asistencias::where('cliente_id', $cliente->id)->orderBy('id', 'desc')->first();
+        $asistencia = Asistencias::where('cliente_id', $cliente->id)
+            ->select('plan_activo', 'fecha_registro', 'fecha_vencimiento', 'hora_registro')
+            ->orderBy('id', 'desc')
+            ->first();
+        if ($asistencia) {
+            setlocale(LC_TIME, 'es_ES.UTF-8');
+            Carbon::setLocale('es');
+            $asistencia->fecha_registro = Carbon::parse($asistencia->fecha_registro)
+                ->translatedFormat('l d \d\e F \d\e\l Y');
+            $asistencia->fecha_vencimiento = Carbon::parse($asistencia->fecha_vencimiento)
+                ->translatedFormat('l d \d\e F \d\e\l Y');
+        }
         if ($user_rol == $this->admin) {
             $servicios = Servicio::where('activo', true)->get();
             $ultimoPago = $this->ultimo_pago($cliente->id);
