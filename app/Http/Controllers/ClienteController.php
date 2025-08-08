@@ -212,11 +212,11 @@ class ClienteController extends Controller
         $clientes = DB::table('clientes as cli')
             ->join('pago_servicios as ps', function ($join) {
                 $join->on('cli.id', '=', 'ps.cliente')
-                    //->whereRaw('ps.fecha_pago = (SELECT MAX(sub_ps.fecha_pago) FROM pago_servicios AS sub_ps WHERE sub_ps.cliente = cli.id)');
                     ->where('ps.activo', true);
             })
             ->join('generos as g', 'cli.genero', '=', 'g.id')
             ->join('servicios as s', 'ps.servicio', '=', 's.id')
+            ->leftJoin('puntos as pt', 'pt.cliente', '=', 'cli.id') // unión con puntos
             ->select(
                 'cli.id',
                 'cli.nombre',
@@ -226,16 +226,26 @@ class ClienteController extends Controller
                 'g.nombre as genero',
                 's.nombre as servicio',
                 DB::raw('CASE 
-                     WHEN NOW()::date <= ps.fecha_vencimiento::date THEN true 
-                     ELSE false 
-                 END AS estado'),
+            WHEN NOW()::date <= ps.fecha_vencimiento::date THEN true 
+            ELSE false 
+        END AS estado'),
                 DB::raw('CASE 
-                     WHEN NOW()::date = ps.fecha_vencimiento::date THEN \'Último día\' 
-                     ELSE ((ps.fecha_vencimiento::date - NOW()::date)::text || \' días\') 
-                 END AS dias_restantes'),
-                DB::raw('(ps.fecha_vencimiento::date - NOW()::date) AS dias_restantes_numerico')
+            WHEN NOW()::date = ps.fecha_vencimiento::date THEN \'Último día\' 
+            ELSE ((ps.fecha_vencimiento::date - NOW()::date)::text || \' días\') 
+        END AS dias_restantes'),
+                DB::raw('(ps.fecha_vencimiento::date - NOW()::date) AS dias_restantes_numerico'),
+                DB::raw('COALESCE(SUM(pt.puntos), 0) as total_puntos') // suma de puntos por cliente
+            )
+            ->groupBy(
+                'cli.id',
+                'cli.nombre',
+                'cli.codigo',
+                'ps.fecha_pago',
+                'ps.fecha_vencimiento',
+                'g.nombre',
+                's.nombre'
             );
-
+            
         if (!$estado) {
             $clientes->whereRaw('(ps.fecha_vencimiento::date - NOW()::date) > -30');
         }
