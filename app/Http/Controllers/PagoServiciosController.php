@@ -113,7 +113,7 @@ class PagoServiciosController extends Controller
                 'servicios' => $servicios,
                 'tipo_pagos' => $tipo_pagos,
                 'ultimoPago' => $ultimoPago,
-                'asistencia' => $asistencia->plan_activo ? null : $asistencia
+                'asistencia' => isset($asistencia) && $asistencia->plan_activo ? null : $asistencia
             ]);
         }
         return back()->with('permission', 'No tiene permiso para realizar esta acción');
