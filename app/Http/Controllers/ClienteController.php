@@ -26,7 +26,7 @@ class ClienteController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            $servicios = Servicio::Where('activo', true)->get();
+            $servicios = Servicio::Where('activo', true)->where('activo', true)->where('eliminado', false)->get();
             $tipo_pagos = TipoPagoServicio::all();
             $generos = Genero::all(); // Obtener los géneros disponibles
             $fecha = new DateTime();
@@ -110,7 +110,7 @@ class ClienteController extends Controller
     }
     public function index()
     {
-        $clientes = Cliente::with('genero')->orderBy('id', 'desc')->get();
+        $clientes = Cliente::with('genero')->where('activo', true)->where('eliminado', false)->orderBy('id', 'desc')->get();
         return Inertia::render('Clientes/Main', ['clientes' => $clientes]);
     }
     public function activos()
@@ -164,7 +164,9 @@ class ClienteController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            $cliente->delete();
+            $cliente->activo = false;
+            $cliente->eliminado = true;
+            $cliente->save();
             return redirect()->route('clientes.index')->with('success', 'Cliente eliminado correctamente.');
         }
         return back()->with('permission', 'No tiene permiso para realizar esta accion');
@@ -236,6 +238,8 @@ class ClienteController extends Controller
                 DB::raw('(ps.fecha_vencimiento::date - NOW()::date) AS dias_restantes_numerico'),
                 DB::raw('COALESCE(SUM(pt.puntos), 0) as total_puntos') // suma de puntos por cliente
             )
+            ->where('cli.activo', true)
+            ->where('cli.eliminado', false)
             ->groupBy(
                 'cli.id',
                 'cli.nombre',
@@ -245,7 +249,7 @@ class ClienteController extends Controller
                 'g.nombre',
                 's.nombre'
             );
-            
+
         if (!$estado) {
             $clientes->whereRaw('(ps.fecha_vencimiento::date - NOW()::date) > -30');
         }
