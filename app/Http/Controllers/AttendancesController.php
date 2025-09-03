@@ -31,7 +31,7 @@ class AttendancesController extends Controller
         $request->validate([
             'codigo' => 'required|Numeric|max_digits:4|min_digits:4',
         ]);
-        $cliente = Cliente::where('codigo', $request->codigo)->first();
+        $cliente = Cliente::where('codigo', $request->codigo)->where('activo', true)->where('eliminado', false)->first();
         if ($cliente) {
             $info = $this->getInformacion($cliente->id);
             if (!$info) {
