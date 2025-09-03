@@ -68,7 +68,10 @@ class AttendancesController extends Controller
             })
             ->join('tipo_pagos_servicios as tp', 'ps.tipo_pago', '=', 'tp.id')
             ->select('ps.fecha_pago',  'ps.fecha_vencimiento', 'tp.nombre as tipo_pago', DB::raw('(ps.fecha_vencimiento::date - NOW()::date) AS dias_restantes_numerico'))
-            ->where('ps.cliente', $clienteId)->first();
+            ->where('ps.cliente', $clienteId)
+            ->where('cli.activo', true)
+            ->where('cli.eliminado', false)
+            ->first();
     }
     private function guardarAsistencia($clienteId, $plan = true)
     {
