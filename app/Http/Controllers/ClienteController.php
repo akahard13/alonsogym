@@ -26,7 +26,7 @@ class ClienteController extends Controller
     {
         $user_rol = Auth::user()->rol;
         if ($user_rol == $this->admin) {
-            $servicios = Servicio::Where('activo', true)->where('activo', true)->where('eliminado', false)->get();
+            $servicios = Servicio::Where('activo', true)->get();
             $tipo_pagos = TipoPagoServicio::all();
             $generos = Genero::all(); // Obtener los géneros disponibles
             $fecha = new DateTime();
